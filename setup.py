@@ -24,9 +24,15 @@ setup(name = "kismetdb",
       license = "BSD",
       keywords = "kismet",
       url = "https://github.com/ashmastaflash/kismet-db",
-      packages = ["kismetdb"],
+      packages = ["kismetdb", "kismetdb.scripts"],
       install_requires = ["python-dateutil"],
       long_description = build_long_desc(),
+      entry_points={
+          "console_scripts": [
+              "kismet_log_devices_to_json = kismetdb.scripts.log_devices_to_json:main",
+              "kismet_log_to_csv = kismetdb.scripts.log_to_csv:main",
+              "kismet_log_to_kml = kismetdb.scripts.log_to_kml:main",
+              "kismet_log_to_pcap = kismetdb.scripts.log_to_pcap:main"]},
       classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",

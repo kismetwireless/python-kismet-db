@@ -40,7 +40,6 @@ class BaseInterface(object):
             if not k in self.valid_kwargs:
                 continue
             results = self.valid_kwargs[k](k, v)
-            print(results)
             query_parts.append(results[0])
             replacements.update(results[1])
         return (query_parts, replacements)
@@ -96,6 +95,61 @@ class BaseInterface(object):
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
         return self.get_rows(columns, sql, replacements)
+
+    def yield_all(self, **kwargs):
+        """Get all objects represented by this class from Kismet DB.
+
+        Yields one row at a time.
+
+        Keyword Args:
+            See class documentation!
+
+        Yields:
+            dict: Dict representing one row from query.
+        """
+
+        if kwargs:
+            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+        else:
+            query_parts = []
+            replacements = {}
+
+        sql = "SELECT {} FROM {}".format(", ".join(self.column_names),
+                                         self.table_name)
+        if query_parts:
+            sql = sql + " WHERE " + " AND ".join(query_parts)
+        for row in self.yield_rows(self.column_names, sql, replacements):
+            yield row
+
+    def yield_meta(self, **kwargs):
+        """Yield metadata from DB, excluding bulk data columns.
+
+        Yields one row at a time.
+
+        Keyword Args:
+            See class documentation!
+
+        Returns:
+            dict: Dict representing one row from query.
+        """
+
+        query_parts = []
+        replacements = {}
+        columns = list(self.column_names)
+        columns.remove(self.bulk_data_field)
+
+        if kwargs:
+            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+        else:
+            query_parts = []
+            replacements = {}
+
+        sql = "SELECT {} FROM {}".format(", ".join(columns),
+                                         self.table_name)
+        if query_parts:
+            sql = sql + " WHERE " + " AND ".join(query_parts)
+        for row in self.yield_rows(columns, sql, replacements):
+            yield row
 
     @classmethod
     def check_db_exists(cls, log_file):
@@ -170,6 +224,9 @@ class BaseInterface(object):
                 row dictionary (these are the dictionary keys).
             sql (str): SQL statement.
             replacements (dict): Replacements for SQL query.
+
+        Returns:
+            list: List of dictionary items.
         """
         results = []
         db = sqlite3.connect(self.db_file)
@@ -181,3 +238,35 @@ class BaseInterface(object):
             results.append({x: str(row[x]) for x in column_names}.copy())
         db.close()
         return results
+
+    def yield_rows(self, column_names, sql, replacements):
+        """Yield rows from query results as a list of dictionary objects.
+
+        Args:
+            column_names (list): List of column names. Used in constructing
+                row dictionary (these are the dictionary keys).
+            sql (str): SQL statement.
+            replacements (dict): Replacements for SQL query.
+
+        Yields:
+            dict: Dictionary object representing one row in result of SQL
+                query.
+        """
+        db = sqlite3.connect(self.db_file)
+        db.row_factory = sqlite3.Row
+        cur = db.cursor()
+        print("Query: {} | Replacements: {}".format(sql, str(replacements)))
+        cur.execute(sql, replacements)
+        moar_rows = True
+        while moar_rows:
+            try:
+                row = cur.fetchone()
+                if row is None:
+                    moar_rows = False
+                else:
+                    yield {x: str(row[x]) for x in column_names}.copy()
+            except KeyboardInterrupt:
+                moar_rows = False
+                print("Caught keyboard interrupt, exiting gracefully!")
+        db.close()
+        return
