@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
-# Simple dumper to extract kismet records and export them as a json
-# array
+"""Write device records from Kismet DB to KML."""
 
 import argparse
 import datetime

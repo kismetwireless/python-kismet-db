@@ -26,6 +26,20 @@ In the Python interpreter:
         print(json.loads(alert["json"])["kismet.alert.text"])
 
 
+Included scripts
+----------------
+
+Alongside the Python library, several commands are installed:
+
+* ``kismet_log_devices_to_json``
+* ``kismet_log_to_csv``
+* ``kismet_log_to_kml``
+* ``kismet_log_to_pcap``
+
+Following any of the prior commands with ``--help`` will provide details on
+usage
+
+
 Testing
 -------
 

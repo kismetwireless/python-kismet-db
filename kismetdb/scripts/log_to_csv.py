@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Export metadata from the Kismet DB to CSV."""
 
 import argparse
 import datetime
