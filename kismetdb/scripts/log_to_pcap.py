@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Write packet captures from Kismet DB to pcap file."""
 
 import argparse
 import datetime

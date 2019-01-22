@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
-# Simple dumper to extract kismet records and export them as a json
-# array
+"""Simple dumper to extract kismet records and export them as a json array."""
 
 import argparse
 import datetime
