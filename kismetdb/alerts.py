@@ -3,7 +3,7 @@ from .base_interface import BaseInterface
 from .utility import Utility
 
 class Alerts(BaseInterface):
-    """This abstraction covers alerts stored in the Kismet DB.
+    """This object covers alerts stored in the Kismet DB.
 
     Args:
         file_location (str): Path to Kismet log file.

@@ -3,7 +3,7 @@ from .base_interface import BaseInterface
 from .utility import Utility
 
 class Packets(BaseInterface):
-    """This abstraction covers packets stored in the Kismet DB.
+    """This object covers packets stored in the Kismet DB.
 
 
     The actual packet is stored in the `packet` field of the dictionary

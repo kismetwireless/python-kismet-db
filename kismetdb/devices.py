@@ -3,11 +3,11 @@ from .base_interface import BaseInterface
 from .utility import Utility
 
 class Devices(BaseInterface):
-    """This abstraction covers devices tracked in the Kismet DB.
+    """This object covers devices tracked in the Kismet DB.
 
 
     Unlike other abstractions which contain the object detail under the `json`
-        key, this abstraction contains the details under the key named `device`
+    key, this abstraction contains the details under the key named `device`
 
     Args:
         file_location (str): Path to Kismet log file.
@@ -23,7 +23,8 @@ class Devices(BaseInterface):
             recent observation timestamp is after this time.
         devkey (str, list): Exact match for this devkey.
         phyname (str, list): Exact match for this phyname.
-        devmac (str, list): Exact match for this device MAC
+        devmac (str, list): Exact match for this device MAC.
+        type (str, list): Exact match for this device type.
         strongest_signal_gt (str, int): Match devices where the strongest
             signal is greater than the integer representation of this string.
         strongest_signal_lt (str, int): Match devices where the strongest
@@ -61,6 +62,7 @@ class Devices(BaseInterface):
                     "devkey": Utility.generate_multi_string_sql_eq,
                     "phyname": Utility.generate_multi_string_sql_eq,
                     "devmac": Utility.generate_multi_string_sql_eq,
+                    "type": Utility.generate_multi_string_sql_eq,
                     "strongest_signal_lt": Utility.generate_single_int_sql_lt,
                     "strongest_signal_gt": Utility.generate_single_int_sql_gt,
                     "bytes_data_lt": Utility.generate_single_int_sql_lt,
