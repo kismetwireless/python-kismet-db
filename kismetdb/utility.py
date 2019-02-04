@@ -7,6 +7,13 @@ from dateutil import parser as dateparser
 
 class Utility(object):
     @classmethod
+    def timestamp_to_iso(cls, timestamp):
+        """Return an ISO-formatted timestamp for unix ``timestamp``."""
+        if not isinstance(timestamp, int):
+            raise ValueError("Integer required for timestamp conversion.")
+        return datetime.datetime.fromtimestamp(timestamp).isoformat()
+
+    @classmethod
     def timestamp_to_dbtime(cls, timestamp):
         """Return a tuple containing Unix epoch seconds and microseconds.
 
@@ -179,7 +186,7 @@ class Utility(object):
 
         """
         if not isinstance(filter_values, list):
-            return generate_single_int_sql_eq(column_name, filter_values)
+            return cls.generate_single_string_sql_eq(column_name, filter_values)
         sql_parts = []
         replacement = {}
         increment = 1

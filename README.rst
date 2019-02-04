@@ -1,6 +1,10 @@
 Kismet DB abstraction
 =====================
 
+.. image:: https://readthedocs.org/projects/kismetdb/badge/?version=latest
+:target: https://kismetdb.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
 Quickstart
 ----------
 

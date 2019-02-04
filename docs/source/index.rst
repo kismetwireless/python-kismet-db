@@ -11,11 +11,14 @@ Welcome to kismetdb's documentation!
    :caption: Contents:
 
    installation
+   quickstart
    alerts
    data_sources
    devices
    packets
    extras
+   testing
+   updating
 
 
 Indices and tables

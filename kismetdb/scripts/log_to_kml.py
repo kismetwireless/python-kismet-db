@@ -4,7 +4,7 @@ import argparse
 import datetime
 import json
 import os
-import struct
+import pprint
 import sqlite3
 import sys
 import re
@@ -29,6 +29,8 @@ def main():
     parser.add_argument("--ssid", action="store", dest="ssid", help='Only plot networks which match the SSID (or SSID regex)')
 
     results = parser.parse_args()
+
+    py3 = False if sys.version_info[0] < 3 else True
 
     log_to_single = True
 
@@ -58,7 +60,6 @@ def main():
     for device in devices.yield_all(**query_args):
         try:
             dev = json.loads(device["device"])
-
             # Check for the SSID if we're doing that; allow it to trip
             # a KeyError and jump out of processing this device
             if not results.ssid is None:
@@ -107,6 +108,10 @@ def main():
             continue
         except KeyError:
             continue
+        except json.decoder.JSONDecodeError as e:
+            print(device_blob)
+            print(type(device_blob))
+            raise e
     kml.save(results.outfile)
     print("Exported {} devices to {}".format(num_plotted, results.outfile))
 

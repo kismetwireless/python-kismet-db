@@ -3,7 +3,7 @@ from .base_interface import BaseInterface
 from .utility import Utility
 
 class DataSources(BaseInterface):
-    """This abstraction covers data sources stored in the Kismet DB.
+    """This object covers data sources stored in the Kismet DB.
 
     Args:
         file_location (str): Path to Kismet log file.
