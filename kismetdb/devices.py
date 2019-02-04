@@ -1,4 +1,6 @@
 """Devices abstraction."""
+import json
+
 from .base_interface import BaseInterface
 from .utility import Utility
 
@@ -67,3 +69,10 @@ class Devices(BaseInterface):
                     "strongest_signal_gt": Utility.generate_single_int_sql_gt,
                     "bytes_data_lt": Utility.generate_single_int_sql_lt,
                     "bytes_data_gt": Utility.generate_single_int_sql_gt}
+    bulk_parser = "device_bulk_parser"
+
+    @classmethod
+    def device_bulk_parser(cls, device):
+        """We ensure that a json-parseable string gets passed up the stack."""
+        retval = json.dumps(json.loads(device))
+        return retval

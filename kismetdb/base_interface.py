@@ -20,17 +20,41 @@ class BaseInterface(object):
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
+        bulk_parser (None or str): This is the name of the custom converter
+            used for converting bulk data coming from the DB into something
+            predictable for the user.
 
     """
     table_name = "KISMET"
     bulk_data_field = ""
     column_names = ["kismet_version", "db_version", "db_module"]
     valid_kwargs = {}
+    bulk_parser = None
+    query_column_names = []
 
     def __init__(self, file_location):
         self.check_db_exists(file_location)
         self.check_column_names(file_location)
         self.db_file = file_location
+        self.set_query_column_names()
+
+    def set_query_column_names(self):
+        """Build query columns, which incorporate converters for bulk fields.
+
+        This allows us to set query columns that may be different from the
+        actual columns used in the database. This is necessary to incorporate
+        some of the data massaging as it comes out of the database, so
+        higher-level logic can parse it more easily.
+
+        """
+        result = []
+        for col in self.column_names:
+            if (self.bulk_parser is not None
+                and col == self.bulk_data_field):
+                result.append("{} as \"{} [{}]\"".format(col, col, col))
+            else:
+                result.append(col)
+        self.query_column_names = result
 
     def generate_parts_and_replacements(self, filters):
         """Return tuple with sql parts and replacements."""
@@ -60,7 +84,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.column_names),
+        sql = "SELECT {} FROM {}".format(", ".join(self.query_column_names),
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -114,7 +138,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.column_names),
+        sql = "SELECT {} FROM {}".format(", ".join(self.query_column_names),
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -229,8 +253,13 @@ class BaseInterface(object):
             list: List of dictionary items.
         """
         results = []
-        db = sqlite3.connect(self.db_file)
+        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
+        if self.bulk_parser:
+            print("Registering {} for {}".format(self.bulk_parser,
+                                                 self.bulk_data_field))
+            sqlite3.register_converter(self.bulk_data_field,
+                                       getattr(self, self.bulk_parser))
         cur = db.cursor()
         print("Query: {} | Replacements: {}".format(sql, str(replacements)))
         cur.execute(sql, replacements)
@@ -252,8 +281,13 @@ class BaseInterface(object):
             dict: Dictionary object representing one row in result of SQL
                 query.
         """
-        db = sqlite3.connect(self.db_file)
+        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
+        if self.bulk_parser:
+            print("Registering {} for {}".format(self.bulk_parser,
+                                                 self.bulk_data_field))
+            sqlite3.register_converter(self.bulk_data_field,
+                                       getattr(self, self.bulk_parser))
         cur = db.cursor()
         print("Query: {} | Replacements: {}".format(sql, str(replacements)))
         cur.execute(sql, replacements)

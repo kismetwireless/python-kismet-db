@@ -56,8 +56,9 @@ def main():
     if results.outfile is None:
         results.outfile = "{}-{}.csv".format(results.infile, replacements["srctable"])
 
+    csv_file_mode = "wb" if sys.version_info[0] < 3 else "w"
 
-    with open(results.outfile, 'wb') as csvfile:
+    with open(results.outfile, csv_file_mode) as csvfile:
         csvWriter = csv.DictWriter(csvfile, delimiter='\t', extrasaction="ignore",
                                    fieldnames=column_names)
         nrows = 0
