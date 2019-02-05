@@ -5,4 +5,4 @@ from .devices import Devices  # NOQA
 from .packets import Packets  # NOQA
 from .utility import Utility  # NOQA
 
-__version__ = "4.0.2"
+__version__ = "4.0.3"
