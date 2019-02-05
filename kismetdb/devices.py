@@ -4,6 +4,7 @@ import json
 from .base_interface import BaseInterface
 from .utility import Utility
 
+
 class Devices(BaseInterface):
     """This object covers devices tracked in the Kismet DB.
 
@@ -60,7 +61,7 @@ class Devices(BaseInterface):
     valid_kwargs = {"first_time_lt": Utility.generate_single_tstamp_secs_lt,
                     "first_time_gt": Utility.generate_single_tstamp_secs_gt,
                     "last_time_lt": Utility.generate_single_tstamp_secs_lt,
-                    "first_time_gt": Utility.generate_single_tstamp_secs_gt,
+                    "last_time_gt": Utility.generate_single_tstamp_secs_gt,
                     "devkey": Utility.generate_multi_string_sql_eq,
                     "phyname": Utility.generate_multi_string_sql_eq,
                     "devmac": Utility.generate_multi_string_sql_eq,
@@ -74,5 +75,6 @@ class Devices(BaseInterface):
     @classmethod
     def device_bulk_parser(cls, device):
         """We ensure that a json-parseable string gets passed up the stack."""
+        retval = device
         retval = json.dumps(json.loads(device))
         return retval
