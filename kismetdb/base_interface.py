@@ -49,8 +49,7 @@ class BaseInterface(object):
         """
         result = []
         for col in self.column_names:
-            if (self.bulk_parser is not None
-                and col == self.bulk_data_field):
+            if (self.bulk_parser is not None and col == self.bulk_data_field):
                 result.append("{} as \"{} [{}]\"".format(col, col, col))
             else:
                 result.append(col)
@@ -61,7 +60,7 @@ class BaseInterface(object):
         query_parts = []
         replacements = {}
         for k, v in list(filters.items()):
-            if not k in self.valid_kwargs:
+            if k not in self.valid_kwargs:
                 continue
             results = self.valid_kwargs[k](k, v)
             query_parts.append(results[0])
@@ -193,7 +192,7 @@ class BaseInterface(object):
             err = "Could not find input file '{}'".format(log_file)
             raise ValueError(err)
         try:
-            column_names = cls.get_column_names(log_file, "KISMET")
+            cls.get_column_names(log_file, "KISMET")
         except sqlite3.DatabaseError:
             err = "This is not a valid database file: {}".format(log_file)
             raise ValueError(err)
@@ -256,15 +255,12 @@ class BaseInterface(object):
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
         if self.bulk_parser:
-            print("Registering {} for {}".format(self.bulk_parser,
-                                                 self.bulk_data_field))
             sqlite3.register_converter(self.bulk_data_field,
                                        getattr(self, self.bulk_parser))
         cur = db.cursor()
-        print("Query: {} | Replacements: {}".format(sql, str(replacements)))
         cur.execute(sql, replacements)
         for row in cur.fetchall():
-            results.append({x: str(row[x]) for x in column_names}.copy())
+            results.append({x: row[x] for x in column_names}.copy())
         db.close()
         return results
 
@@ -284,12 +280,9 @@ class BaseInterface(object):
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
         if self.bulk_parser:
-            print("Registering {} for {}".format(self.bulk_parser,
-                                                 self.bulk_data_field))
             sqlite3.register_converter(self.bulk_data_field,
                                        getattr(self, self.bulk_parser))
         cur = db.cursor()
-        print("Query: {} | Replacements: {}".format(sql, str(replacements)))
         cur.execute(sql, replacements)
         moar_rows = True
         while moar_rows:
@@ -298,7 +291,7 @@ class BaseInterface(object):
                 if row is None:
                     moar_rows = False
                 else:
-                    yield {x: str(row[x]) for x in column_names}.copy()
+                    yield {x: row[x] for x in column_names}.copy()
             except KeyboardInterrupt:
                 moar_rows = False
                 print("Caught keyboard interrupt, exiting gracefully!")

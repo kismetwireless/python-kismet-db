@@ -78,7 +78,7 @@ class Utility(object):
         ts = datetime.datetime.utcfromtimestamp(0)
         epoch = datetime.datetime.utcfromtimestamp(0)
         try:
-            ts = dateparser.parse(timestamp, fuzzy = True)
+            ts = dateparser.parse(timestamp, fuzzy=True)
         except ValueError as e:
             err = ("Could not extract a date/time from start-time "
                    "argument: {}".format(e))
@@ -186,7 +186,8 @@ class Utility(object):
 
         """
         if not isinstance(filter_values, list):
-            return cls.generate_single_string_sql_eq(column_name, filter_values)
+            return cls.generate_single_string_sql_eq(column_name,
+                                                     filter_values)
         sql_parts = []
         replacement = {}
         increment = 1

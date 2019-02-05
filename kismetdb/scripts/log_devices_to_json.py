@@ -1,25 +1,25 @@
 """Simple dumper to extract kismet records and export them as a json array."""
 
 import argparse
-import datetime
 import json
 import os
-import struct
-import sqlite3
 import sys
 
 import kismetdb
 
 def main():
-    parser = argparse.ArgumentParser(description="Kismet to Pcap Log Converter")
-    parser.add_argument("--in", action="store", dest="infile", help='Input (.kismet) file')
-    parser.add_argument("--out", action="store", dest="outfile", help='Output filename (optional)')
-    parser.add_argument("--start-time", action="store", dest="starttime", help='Only list devices seen after given time')
-    parser.add_argument("--min-signal", action="store", dest="minsignal", help='Only list devices with a best signal higher than min-signal')
+    parser = argparse.ArgumentParser(description="Kismet to Pcap Logs")
+    parser.add_argument("--in", action="store", dest="infile",
+                        help='Input (.kismet) file')
+    parser.add_argument("--out", action="store", dest="outfile",
+                        help='Output filename (optional)')
+    parser.add_argument("--start-time", action="store", dest="starttime",
+                        help='Only list devices seen after given time')
+    parser.add_argument("--min-signal", action="store", dest="minsignal",
+        help='Only list devices with a best signal higher than min-signal')
 
     results = parser.parse_args()
     query_args = {}
-    log_to_single = True
 
     if results.infile is None:
         print("Expected --in [file]")

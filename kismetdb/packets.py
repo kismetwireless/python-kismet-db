@@ -2,6 +2,7 @@
 from .base_interface import BaseInterface
 from .utility import Utility
 
+
 class Packets(BaseInterface):
     """This object covers packets stored in the Kismet DB.
 
@@ -59,7 +60,6 @@ class Packets(BaseInterface):
                     "sourcemac": Utility.generate_multi_string_sql_eq,
                     "destmac": Utility.generate_multi_string_sql_eq,
                     "transmac": Utility.generate_multi_string_sql_eq,
-                    "devkey": Utility.generate_multi_string_sql_eq,
                     "devmac": Utility.generate_multi_string_sql_eq,
                     "datasource": Utility.generate_multi_string_sql_eq,
                     "min_signal": Utility.generate_single_int_sql_gt,
