@@ -2,6 +2,7 @@
 from .base_interface import BaseInterface
 from .utility import Utility
 
+
 class DataSources(BaseInterface):
     """This object covers data sources stored in the Kismet DB.
 

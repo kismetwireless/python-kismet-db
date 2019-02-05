@@ -10,7 +10,6 @@ import sys
 import kismetdb
 
 def main():
-    py3 = False if sys.version_info[0] < 3 else True
 
     # Write a raw pcap file header
     def write_pcap_header(f, dlt):
@@ -23,10 +22,7 @@ def main():
                 int(dlt) # packet type
                 )
 
-        if py3:
-            f.write(str(hdr))
-        else:
-            f.write(hdr)
+        f.write(hdr)
 
     # Write a specific frame
     def write_pcap_packet(f, timeval_s, timeval_us, packet_bytes):
@@ -37,12 +33,8 @@ def main():
                 packet_len,
                 packet_len
                 )
-        if py3:
-            f.write(str(pkt))
-            f.write(str(packet_bytes))
-        else:
-            f.write(pkt)
-            f.write(packet_bytes)
+        f.write(pkt)
+        f.write(packet_bytes)
 
 
     parser = argparse.ArgumentParser(description="Kismet to Pcap Log Converter")
@@ -94,9 +86,7 @@ def main():
     packet_store = kismetdb.Packets(results.infile)
 
     npackets = 0
-
-    file_mode = "w" if py3 else "wb"
-
+    file_mode = "wb"
     for result in packet_store.yield_all(**query_args):
         if logf == None:
             if results.silent == None:

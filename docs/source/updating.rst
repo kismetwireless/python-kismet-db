@@ -5,10 +5,10 @@ Updating
 
 Over time, we expect that the database schema will change. To make
 transitioning to a new schema easier, each object is defined with the expected
-database defined as a class variable named ``column_names``, and the bulk data
-field (which contains json or raw packet capture) is in a class variable named
-``bulk_data_field``. The ``valid_kwargs`` class variable is used in parsing
-keyword arguments for filtering in the SQL query. These items tie into
+database columns defined in a class variable named ``column_names``. The bulk
+data field (which contains json or raw packet capture) is in a class variable
+named ``bulk_data_field``. The ``valid_kwargs`` class variable is used in
+parsing keyword arguments for filtering in the SQL query. These items tie into
 functions that live in the Utility class, and are used for forming the SQL
 that's used to query the Kismet DB.
 
