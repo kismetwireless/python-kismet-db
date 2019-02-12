@@ -11,11 +11,11 @@ import kismetdb
 def main():
     parser = argparse.ArgumentParser(description="Kismet to CSV Log Converter")
     parser.add_argument("--in", action="store", dest="infile",
-                        help='Input (.kismet) file')
+                        help="Input (.kismet) file")
     parser.add_argument("--out", action="store", dest="outfile",
-                        help='Output CSV filename')
+                        help="Output CSV filename")
     parser.add_argument("--table", action="store", dest="srctable",
-                        help='Select the table to output')
+                        help="Select the table to output")
 
     results = parser.parse_args()
     replacements = {}
@@ -25,7 +25,7 @@ def main():
         sys.exit(1)
 
     if not os.path.isfile(results.infile):
-        print("Could not find input file '{}'".format(results.infile))
+        print("Could not find input file \"{}\"".format(results.infile))
         sys.exit(1)
 
     if results.srctable is None:
@@ -63,7 +63,7 @@ def main():
     csv_file_mode = "wb" if sys.version_info[0] < 3 else "w"
 
     with open(results.outfile, csv_file_mode) as csvfile:
-        csvWriter = csv.DictWriter(csvfile, delimiter='\t',
+        csvWriter = csv.DictWriter(csvfile, delimiter="\t",
                                    extrasaction="ignore",
                                    fieldnames=column_names)
         nrows = 0

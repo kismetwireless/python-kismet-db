@@ -12,8 +12,7 @@ class TestUnitUtility(object):
         assert result != (0, 0)
 
     def test_unit_utility_timestamp_string_to_tuple(self):
-        timestamps = ["today", "yesterday", "2018-05-23T12:05:45.3001",
-                      "2018-01-01"]
+        timestamps = ["2018-05-23T12:05:45.3001", "2018-01-01"]
         for timestamp in timestamps:
             result, err = kismetdb.Utility.timestamp_string_to_tuple(timestamp)
             assert isinstance(result, tuple)
@@ -32,7 +31,7 @@ class TestUnitUtility(object):
         assert isinstance(result, tuple)
         assert result == (1514764800, 0)
 
-    def test_unit_utility_timestamp_string_to_tuple(self):
+    def test_unit_utility_timestamp_string_to_tuple_2(self):
         timestamps = ["nonsense", "nevermind", "2018-02-31"]
         for timestamp in timestamps:
             result, err = kismetdb.Utility.timestamp_string_to_tuple(timestamp)
