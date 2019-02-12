@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import pprint
 import sys
 import re
 
@@ -66,6 +67,7 @@ def main():
                         break
 
                 if not matched:
+                    print("Not a match on SSID!")
                     continue
 
             loc = None
@@ -76,6 +78,7 @@ def main():
                 loc = dev["kismet.device.base.location"]["kismet.common.location.avg_loc"]  # NOQA
 
             if loc == 0:
+                print("Null island...")
                 continue
 
             mac = dev["kismet.device.base.macaddr"]

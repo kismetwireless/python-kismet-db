@@ -16,7 +16,7 @@ class TestIntegrationBaseInterface(object):
         here_dir = os.path.dirname(os.path.abspath(__file__))
         test_db = os.path.join(here_dir, "./testdata.kismet")
         with pytest.raises(ValueError) as e:
-            base_interface = kismetdb.BaseInterface(test_db)
+            kismetdb.BaseInterface(test_db)
         errtext = str(e.value)
-        assert 'testdata.kismet' in errtext
-        assert 'Could not find' in errtext
+        assert "testdata.kismet" in errtext
+        assert "Could not find" in errtext

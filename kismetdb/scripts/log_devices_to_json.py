@@ -7,16 +7,18 @@ import sys
 
 import kismetdb
 
+
 def main():
     parser = argparse.ArgumentParser(description="Kismet to Pcap Logs")
     parser.add_argument("--in", action="store", dest="infile",
-                        help='Input (.kismet) file')
+                        help="Input (.kismet) file")
     parser.add_argument("--out", action="store", dest="outfile",
-                        help='Output filename (optional)')
+                        help="Output filename (optional)")
     parser.add_argument("--start-time", action="store", dest="starttime",
-                        help='Only list devices seen after given time')
+                        help="Only list devices seen after given time")
     parser.add_argument("--min-signal", action="store", dest="minsignal",
-        help='Only list devices with a best signal higher than min-signal')
+                        help=("Only list devices with a best signal higher "
+                              "than min-signal"))
 
     results = parser.parse_args()
     query_args = {}
@@ -26,7 +28,7 @@ def main():
         sys.exit(1)
 
     if not os.path.isfile(results.infile):
-        print("Could not find input file '{}'".format(results.infile))
+        print("Could not find input file \"{}\"".format(results.infile))
         sys.exit(1)
 
     if results.starttime:
@@ -43,10 +45,10 @@ def main():
     if results.outfile:
         logf = open(results.outfile, "w")
         logf.write(json.dumps(devs, sort_keys=True, indent=4,
-                              separators=(',', ': ')))
+                              separators=(",", ": ")))
     else:
         print(json.dumps(devs, sort_keys=True, indent=4,
-                         separators=(',', ': ')))
+                         separators=(",", ": ")))
 
 
 if __name__ == "__main__":
