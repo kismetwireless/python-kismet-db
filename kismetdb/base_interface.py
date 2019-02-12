@@ -189,7 +189,7 @@ class BaseInterface(object):
                 or file is not a valid Kismet log file.
         """
         if not os.path.isfile(log_file):
-            err = "Could not find input file '{}'".format(log_file)
+            err = "Could not find input file \"{}\"".format(log_file)
             raise ValueError(err)
         try:
             cls.get_column_names(log_file, "KISMET")
@@ -235,7 +235,9 @@ class BaseInterface(object):
         column_names = self.get_column_names(log_file, self.table_name)
         if column_names != self.column_names:
             err = ("Schema mismatch in {} table, in file "
-                   "{}".format(self.table_name, log_file))
+                   "{}. Expected {}, got {}".format(self.table_name, log_file,
+                                                    self.column_names,
+                                                    column_names))
             raise ValueError(err)
         return
 
