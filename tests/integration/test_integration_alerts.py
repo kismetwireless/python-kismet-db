@@ -30,7 +30,8 @@ class TestIntegrationAlerts(object):
         abstraction = kismetdb.Alerts(test_db)
         all_alerts = abstraction.get_all(ts_sec_gt="2018-01-01",
                                          phyname=["Bluetooth",
-                                                  "IEEE802.11"])
+                                                  "IEEE802.11",
+                                                  "UNKNOWN"])
         assert all_alerts
 
     def test_integration_alerts_get_meta(self):

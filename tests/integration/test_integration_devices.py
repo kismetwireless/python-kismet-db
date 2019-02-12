@@ -41,7 +41,7 @@ class TestIntegrationDevices(object):
         assert all_alerts
         assert "json" not in all_alerts[0]
 
-    def test_integration_devices_get_all_date_phy_filter(self):
+    def test_integration_devices_yield_all_date_phy_filter(self):
         here_dir = os.path.dirname(os.path.abspath(__file__))
         test_db = os.path.join(here_dir, "../assets/testdata.kismet")
         abstraction = kismetdb.Devices(test_db)

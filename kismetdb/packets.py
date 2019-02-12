@@ -50,9 +50,9 @@ class Packets(BaseInterface):
     table_name = "packets"
     bulk_data_field = "packet"
     column_names = ["ts_sec", "ts_usec", "phyname", "sourcemac", "destmac",
-                    "transmac", "frequency", "devkey", "lat", "lon",
-                    "packet_len", "signal", "datasource", "dlt", "packet",
-                    "error"]
+                    "transmac", "frequency", "devkey", "lat", "lon", "alt",
+                    "speed", "heading", "packet_len", "signal", "datasource",
+                    "dlt", "packet", "error"]
     valid_kwargs = {"ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devkey": Utility.generate_multi_string_sql_eq,

@@ -2,8 +2,16 @@ Changelog
 =========
 
 
-v4.0.3
+v5.0.0
 ------
+
+New
+~~~
+- Support v5 schema. [Ash Wilson]
+
+
+v4.0.3 (2019-02-05)
+-------------------
 
 Changes
 ~~~~~~~
