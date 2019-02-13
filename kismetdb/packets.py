@@ -45,11 +45,17 @@ class Packets(BaseInterface):
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
+        field_defaults (dict): Statically set these column defaults by DB
+            version.
 
     """
 
     table_name = "packets"
     bulk_data_field = "packet"
+    field_defaults = {4: {"alt": 0,
+                          "speed": 0,
+                          "heading": 0},
+                      5: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "sourcemac",
                             "destmac", "transmac", "frequency", "devkey",
                             "lat", "lon", "packet_len", "signal", "datasource",
