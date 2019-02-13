@@ -29,11 +29,15 @@ class Alerts(BaseInterface):
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
+        field_defaults (dict): Statically set these column defaults by DB
+            version.
 
     """
 
     table_name = "alerts"
     bulk_data_field = "json"
+    field_defaults = {4: {},
+                      5: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
                             "lon", "header", "json"],
                         5: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",

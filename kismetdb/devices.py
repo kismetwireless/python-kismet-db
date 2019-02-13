@@ -50,11 +50,15 @@ class Devices(BaseInterface):
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
+        field_defaults (dict): Statically set these column defaults by DB
+            version.
 
     """
 
     table_name = "devices"
     bulk_data_field = "device"
+    field_defaults = {4: {},
+                      5: {}}
     column_reference = {4: ["first_time", "last_time", "devkey", "phyname",
                             "devmac", "strongest_signal", "min_lat", "min_lon",
                             "max_lat", "max_lon", "avg_lat", "avg_lon",

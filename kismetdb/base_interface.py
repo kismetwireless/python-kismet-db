@@ -27,10 +27,14 @@ class BaseInterface(object):
         bulk_parser (None or str): This is the name of the custom converter
             used for converting bulk data coming from the DB into something
             predictable for the user.
+        field_defaults (dict): Statically set these column defaults by DB
+            version.
 
     """
     table_name = "KISMET"
     bulk_data_field = ""
+    field_defaults = {4: {},
+                      5: {}}
     column_reference = {4: ["kismet_version", "db_version", "db_module"],
                         5: ["kismet_version", "db_version", "db_module"]}
     column_names = None
@@ -272,6 +276,7 @@ class BaseInterface(object):
         Returns:
             list: List of dictionary items.
         """
+        static_fields = self.field_defaults[self.db_version]
         results = []
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
@@ -281,7 +286,9 @@ class BaseInterface(object):
         cur = db.cursor()
         cur.execute(sql, replacements)
         for row in cur.fetchall():
-            results.append({x: row[x] for x in column_names}.copy())
+            result = {x: row[x] for x in column_names}
+            result.update(static_fields)
+            results.append(result.copy())  # NOQA
         db.close()
         return results
 
@@ -298,6 +305,7 @@ class BaseInterface(object):
             dict: Dictionary object representing one row in result of SQL
                 query.
         """
+        static_fields = self.field_defaults[self.db_version]
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
         if self.bulk_parser:
@@ -312,7 +320,9 @@ class BaseInterface(object):
                 if row is None:
                     moar_rows = False
                 else:
-                    yield {x: row[x] for x in column_names}.copy()
+                    result = {x: row[x] for x in column_names}
+                    result.update(static_fields)
+                    yield result.copy()  # NOQA
             except KeyboardInterrupt:
                 moar_rows = False
                 print("Caught keyboard interrupt, exiting gracefully!")
