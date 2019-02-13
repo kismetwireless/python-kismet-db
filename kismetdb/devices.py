@@ -44,7 +44,8 @@ class Devices(BaseInterface):
             is especially true for the retrieval of packet captures.
         column_names (str): Name of columns expected to be in table represented
             by this abstraction. Used for validation against columns in
-            DB on instanitation.
+            DB on instanitation. This is constructed on instantiation, based
+            on the version of DB that's detected.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
@@ -54,10 +55,14 @@ class Devices(BaseInterface):
 
     table_name = "devices"
     bulk_data_field = "device"
-    column_names = ["first_time", "last_time", "devkey", "phyname", "devmac",
-                    "strongest_signal", "min_lat", "min_lon", "max_lat",
-                    "max_lon", "avg_lat", "avg_lon", "bytes_data", "type",
-                    "device"]
+    column_reference = {4: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"],
+                        5: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"]}
     valid_kwargs = {"first_time_lt": Utility.generate_single_tstamp_secs_lt,
                     "first_time_gt": Utility.generate_single_tstamp_secs_gt,
                     "last_time_lt": Utility.generate_single_tstamp_secs_lt,

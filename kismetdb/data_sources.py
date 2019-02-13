@@ -23,7 +23,8 @@ class DataSources(BaseInterface):
             is especially true for the retrieval of packet captures.
         column_names (str): Name of columns expected to be in table represented
             by this abstraction. Used for validation against columns in
-            DB on instanitation.
+            DB on instanitation. This is constructed on instantiation, based
+            on the version of DB that's detected.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
@@ -33,8 +34,10 @@ class DataSources(BaseInterface):
 
     table_name = "datasources"
     bulk_data_field = "json"
-    column_names = ["uuid", "typestring", "definition", "name", "interface",
-                    "json"]
+    column_reference = {4: ["uuid", "typestring", "definition", "name",
+                            "interface", "json"],
+                        5: ["uuid", "typestring", "definition", "name",
+                            "interface", "json"]}
     valid_kwargs = {"uuid": Utility.generate_multi_string_sql_eq,
                     "typestring": Utility.generate_multi_string_sql_eq,
                     "definition": Utility.generate_multi_string_sql_eq,

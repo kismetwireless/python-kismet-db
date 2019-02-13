@@ -13,8 +13,12 @@ class BaseInterface(object):
             as a blob in the DB). This allows the `get_meta()` method to
             exclude information which may have a performance impact. This
             is especially true for the retrieval of packet captures.
-        column_names (str): Name of columns expected to be in table represented
-            by this abstraction. Used for validation against columns in
+        column_reference (dict): Top-level keys in this dictionary are version
+            numbers, and are used to easily extend the schema for new versions.
+            The ``column_names`` attribute is populated from this during
+            instantiation.
+        column_names (list): Name of columns expected to be in this object's
+            table by this abstraction. Used for validation against columns in
             DB on instanitation.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
@@ -27,16 +31,31 @@ class BaseInterface(object):
     """
     table_name = "KISMET"
     bulk_data_field = ""
-    column_names = ["kismet_version", "db_version", "db_module"]
+    column_reference = {4: ["kismet_version", "db_version", "db_module"],
+                        5: ["kismet_version", "db_version", "db_module"]}
+    column_names = None
     valid_kwargs = {}
     bulk_parser = None
     query_column_names = []
 
     def __init__(self, file_location):
         self.check_db_exists(file_location)
-        self.check_column_names(file_location)
         self.db_file = file_location
+        self.db_version = self.get_db_version()
+        self.column_names = self.column_reference[self.db_version]
+        self.check_column_names(file_location)
         self.set_query_column_names()
+
+    def get_db_version(self):
+        sql = "SELECT db_version from KISMET"
+        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
+        db.row_factory = sqlite3.Row
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        result = row["db_version"]
+        db.close()
+        return int(result)
 
     def set_query_column_names(self):
         """Build query columns, which incorporate converters for bulk fields.

@@ -50,7 +50,8 @@ Testing
 -------
 
 In order to test, you must place a kismet sqlite log file at
-``tests/assets/testdata.kismet``.
+``tests/assets/testdata.kismet_4`` and ``tests/assets/testdata.kismet_4``,
+which are Kismet version 4 and 5 databases, respectively.
 
 Testing happens in a Docker build process:
 

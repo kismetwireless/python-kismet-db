@@ -23,7 +23,8 @@ class Alerts(BaseInterface):
             is especially true for the retrieval of packet captures.
         column_names (str): Name of columns expected to be in table represented
             by this abstraction. Used for validation against columns in
-            DB on instanitation.
+            DB on instanitation. This is constructed on instantiation, based
+            on the version of DB that's detected.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
@@ -33,8 +34,10 @@ class Alerts(BaseInterface):
 
     table_name = "alerts"
     bulk_data_field = "json"
-    column_names = ["ts_sec", "ts_usec", "phyname", "devmac", "lat", "lon",
-                    "header", "json"]
+    column_reference = {4: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
+                            "lon", "header", "json"],
+                        5: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
+                            "lon", "header", "json"]}
     valid_kwargs = {"ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devmac": Utility.generate_multi_string_sql_eq,
                     "header": Utility.generate_multi_string_sql_eq,

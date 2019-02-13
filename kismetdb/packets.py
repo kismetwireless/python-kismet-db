@@ -39,7 +39,8 @@ class Packets(BaseInterface):
             is especially true for the retrieval of packet captures.
         column_names (str): Name of columns expected to be in table represented
             by this abstraction. Used for validation against columns in
-            DB on instanitation.
+            DB on instanitation. This is constructed on instantiation, based
+            on the version of DB that's detected.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
@@ -49,10 +50,15 @@ class Packets(BaseInterface):
 
     table_name = "packets"
     bulk_data_field = "packet"
-    column_names = ["ts_sec", "ts_usec", "phyname", "sourcemac", "destmac",
-                    "transmac", "frequency", "devkey", "lat", "lon", "alt",
-                    "speed", "heading", "packet_len", "signal", "datasource",
-                    "dlt", "packet", "error"]
+    column_reference = {4: ["ts_sec", "ts_usec", "phyname", "sourcemac",
+                            "destmac", "transmac", "frequency", "devkey",
+                            "lat", "lon", "packet_len", "signal", "datasource",
+                            "dlt", "packet", "error"],
+                        5: ["ts_sec", "ts_usec", "phyname", "sourcemac",
+                            "destmac", "transmac", "frequency", "devkey",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "packet_len", "signal", "datasource", "dlt",
+                            "packet", "error"]}
     valid_kwargs = {"ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devkey": Utility.generate_multi_string_sql_eq,
