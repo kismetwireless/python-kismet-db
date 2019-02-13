@@ -20,6 +20,8 @@ class TestIntegrationPackets(object):
             assert packet["alt"] == 0
             assert packet["speed"] == 0
             assert packet["heading"] == 0
+            assert isinstance(packet["lat"], float)
+            assert isinstance(packet["lon"], float)
 
     def test_integration_packets_yield_meta(self):
         here_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,3 +34,5 @@ class TestIntegrationPackets(object):
             assert packet["speed"] == 0
             assert packet["heading"] == 0
             assert packet["ts_sec"] != 0
+            assert isinstance(packet["lat"], float)
+            assert isinstance(packet["lon"], float)

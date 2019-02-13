@@ -16,6 +16,9 @@ class TestIntegrationAlerts(object):
         abstraction = kismetdb.Alerts(test_db)
         all_alerts = abstraction.get_all()
         assert all_alerts
+        for alert in all_alerts:
+            assert isinstance(alert["lat"], float)
+            assert isinstance(alert["lon"], float)
 
     def test_integration_alerts_get_all_date_filter(self):
         here_dir = os.path.dirname(os.path.abspath(__file__))

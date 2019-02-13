@@ -24,23 +24,25 @@ class BaseInterface(object):
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
-        bulk_parser (None or str): This is the name of the custom converter
-            used for converting bulk data coming from the DB into something
-            predictable for the user.
         field_defaults (dict): Statically set these column defaults by DB
             version.
+        converters_reference (dict): This provides a reference for converters
+            to use on data coming from the DB on a version by version basis.
+        full_query_column_names (list): Processed column names for full query
+            of kismet DB. Created on instantiation.
+        meta_query_column_names (list): Processed column names for meta query
+            of kismet DB. Created on instantiation.
 
     """
     table_name = "KISMET"
     bulk_data_field = ""
     field_defaults = {4: {},
                       5: {}}
+    converters_reference = {4: {},
+                            5: {}}
     column_reference = {4: ["kismet_version", "db_version", "db_module"],
                         5: ["kismet_version", "db_version", "db_module"]}
-    column_names = None
     valid_kwargs = {}
-    bulk_parser = None
-    query_column_names = []
 
     def __init__(self, file_location):
         self.check_db_exists(file_location)
@@ -48,7 +50,8 @@ class BaseInterface(object):
         self.db_version = self.get_db_version()
         self.column_names = self.column_reference[self.db_version]
         self.check_column_names(file_location)
-        self.set_query_column_names()
+        self.full_query_column_names = self.get_query_column_names()
+        self.meta_query_column_names = self.get_meta_query_column_names()
 
     def get_db_version(self):
         sql = "SELECT db_version from KISMET"
@@ -61,7 +64,7 @@ class BaseInterface(object):
         db.close()
         return int(result)
 
-    def set_query_column_names(self):
+    def get_query_column_names(self):
         """Build query columns, which incorporate converters for bulk fields.
 
         This allows us to set query columns that may be different from the
@@ -71,12 +74,35 @@ class BaseInterface(object):
 
         """
         result = []
-        for col in self.column_names:
-            if (self.bulk_parser is not None and col == self.bulk_data_field):
+        converter_reference = self.converters_reference[self.db_version]
+        column_reference = self.column_reference[self.db_version]
+        for col in column_reference:
+            if col in converter_reference.keys():
                 result.append("{} as \"{} [{}]\"".format(col, col, col))
             else:
                 result.append(col)
-        self.query_column_names = result
+        return result
+
+    def get_meta_query_column_names(self):
+        """Build query columns, which incorporate converters for bulk fields.
+
+        This allows us to set query columns that may be different from the
+        actual columns used in the database. This is necessary to incorporate
+        some of the data massaging as it comes out of the database, so
+        higher-level logic can parse it more easily.
+
+        """
+        result = []
+        converter_reference = self.converters_reference[self.db_version]
+        column_reference = self.column_reference[self.db_version]
+        for col in column_reference:
+            if col == self.bulk_data_field:
+                continue
+            elif col in converter_reference.keys():
+                result.append("{} as \"{} [{}]\"".format(col, col, col))
+            else:
+                result.append(col)
+        return result
 
     def generate_parts_and_replacements(self, filters):
         """Return tuple with sql parts and replacements."""
@@ -106,7 +132,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.query_column_names),
+        sql = "SELECT {} FROM {}".format(", ".join(self.full_query_column_names),  # NOQA
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -136,7 +162,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(columns),
+        sql = "SELECT {} FROM {}".format(", ".join(self.meta_query_column_names),  # NOQA
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -160,7 +186,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.query_column_names),
+        sql = "SELECT {} FROM {}".format(", ".join(self.full_query_column_names),  # NOQA
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -190,7 +216,7 @@ class BaseInterface(object):
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(columns),
+        sql = "SELECT {} FROM {}".format(", ".join(self.meta_query_column_names),  # NOQA
                                          self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
@@ -280,9 +306,8 @@ class BaseInterface(object):
         results = []
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
-        if self.bulk_parser:
-            sqlite3.register_converter(self.bulk_data_field,
-                                       getattr(self, self.bulk_parser))
+        for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
+            sqlite3.register_converter(field_name, converter)
         cur = db.cursor()
         cur.execute(sql, replacements)
         for row in cur.fetchall():
@@ -308,9 +333,8 @@ class BaseInterface(object):
         static_fields = self.field_defaults[self.db_version]
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
-        if self.bulk_parser:
-            sqlite3.register_converter(self.bulk_data_field,
-                                       getattr(self, self.bulk_parser))
+        for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
+            sqlite3.register_converter(field_name, converter)
         cur = db.cursor()
         cur.execute(sql, replacements)
         moar_rows = True

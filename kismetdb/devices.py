@@ -1,6 +1,4 @@
 """Devices abstraction."""
-import json
-
 from .base_interface import BaseInterface
 from .utility import Utility
 
@@ -52,6 +50,12 @@ class Devices(BaseInterface):
             which builds the SQL partial and replacement dictionary.
         field_defaults (dict): Statically set these column defaults by DB
             version.
+        converters_reference (dict): This provides a reference for converters
+            to use on data coming from the DB on a version by version basis.
+        full_query_column_names (list): Processed column names for full query
+            of kismet DB. Created on instantiation.
+        meta_query_column_names (list): Processed column names for meta query
+            of kismet DB. Created on instantiation.
 
     """
 
@@ -59,6 +63,14 @@ class Devices(BaseInterface):
     bulk_data_field = "device"
     field_defaults = {4: {},
                       5: {}}
+    converters_reference = {4: {"device": Utility.device_field_parser,
+                                "min_lat": Utility.format_int_as_latlon,
+                                "min_lon": Utility.format_int_as_latlon,
+                                "max_lat": Utility.format_int_as_latlon,
+                                "max_lon": Utility.format_int_as_latlon,
+                                "avg_lat": Utility.format_int_as_latlon,
+                                "avg_lon": Utility.format_int_as_latlon},
+                            5: {"device": Utility.device_field_parser}}
     column_reference = {4: ["first_time", "last_time", "devkey", "phyname",
                             "devmac", "strongest_signal", "min_lat", "min_lon",
                             "max_lat", "max_lon", "avg_lat", "avg_lon",
@@ -79,11 +91,3 @@ class Devices(BaseInterface):
                     "strongest_signal_gt": Utility.generate_single_int_sql_gt,
                     "bytes_data_lt": Utility.generate_single_int_sql_lt,
                     "bytes_data_gt": Utility.generate_single_int_sql_gt}
-    bulk_parser = "device_bulk_parser"
-
-    @classmethod
-    def device_bulk_parser(cls, device):
-        """We ensure that a json-parseable string gets passed up the stack."""
-        retval = device
-        retval = json.dumps(json.loads(device))
-        return retval
