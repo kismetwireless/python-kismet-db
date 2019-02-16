@@ -9,7 +9,7 @@ import kismetdb
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Kismet to Pcap Logs")
+    parser = argparse.ArgumentParser(description="Kismet devices to json")
     parser.add_argument("--in", action="store", dest="infile",
                         help="Input (.kismet) file")
     parser.add_argument("--out", action="store", dest="outfile",

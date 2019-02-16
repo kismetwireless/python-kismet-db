@@ -1,5 +1,6 @@
 """General utility functions that are shared between other classes."""
 import datetime
+import json
 import sys
 
 from dateutil import parser as dateparser
@@ -141,9 +142,8 @@ class Utility(object):
         This is used to get the lat or lon from the DB into the form other
         tools will more readily accept.
         """
-        in_val = int(lat_or_lon)
-        result = in_val / 100000.0
-        return float(result)
+        result = int(lat_or_lon) / 100000.0
+        return result
 
     @classmethod
     def generate_single_string_sql_eq(cls, column_name, filter_value):
@@ -342,3 +342,10 @@ class Utility(object):
         else:
             result = True if isinstance(target, (str, bytes)) else False
         return result
+
+    @classmethod
+    def device_field_parser(cls, device):
+        """We ensure that a json-parseable string gets passed up the stack."""
+        retval = device
+        retval = json.dumps(json.loads(device))
+        return retval

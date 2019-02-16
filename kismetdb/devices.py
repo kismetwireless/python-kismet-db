@@ -1,6 +1,4 @@
 """Devices abstraction."""
-import json
-
 from .base_interface import BaseInterface
 from .utility import Utility
 
@@ -44,20 +42,43 @@ class Devices(BaseInterface):
             is especially true for the retrieval of packet captures.
         column_names (str): Name of columns expected to be in table represented
             by this abstraction. Used for validation against columns in
-            DB on instanitation.
+            DB on instanitation. This is constructed on instantiation, based
+            on the version of DB that's detected.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
             which builds the SQL partial and replacement dictionary.
+        field_defaults (dict): Statically set these column defaults by DB
+            version.
+        converters_reference (dict): This provides a reference for converters
+            to use on data coming from the DB on a version by version basis.
+        full_query_column_names (list): Processed column names for full query
+            of kismet DB. Created on instantiation.
+        meta_query_column_names (list): Processed column names for meta query
+            of kismet DB. Created on instantiation.
 
     """
 
     table_name = "devices"
     bulk_data_field = "device"
-    column_names = ["first_time", "last_time", "devkey", "phyname", "devmac",
-                    "strongest_signal", "min_lat", "min_lon", "max_lat",
-                    "max_lon", "avg_lat", "avg_lon", "bytes_data", "type",
-                    "device"]
+    field_defaults = {4: {},
+                      5: {}}
+    converters_reference = {4: {"device": Utility.device_field_parser,
+                                "min_lat": Utility.format_int_as_latlon,
+                                "min_lon": Utility.format_int_as_latlon,
+                                "max_lat": Utility.format_int_as_latlon,
+                                "max_lon": Utility.format_int_as_latlon,
+                                "avg_lat": Utility.format_int_as_latlon,
+                                "avg_lon": Utility.format_int_as_latlon},
+                            5: {"device": Utility.device_field_parser}}
+    column_reference = {4: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"],
+                        5: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"]}
     valid_kwargs = {"first_time_lt": Utility.generate_single_tstamp_secs_lt,
                     "first_time_gt": Utility.generate_single_tstamp_secs_gt,
                     "last_time_lt": Utility.generate_single_tstamp_secs_lt,
@@ -70,11 +91,3 @@ class Devices(BaseInterface):
                     "strongest_signal_gt": Utility.generate_single_int_sql_gt,
                     "bytes_data_lt": Utility.generate_single_int_sql_lt,
                     "bytes_data_gt": Utility.generate_single_int_sql_gt}
-    bulk_parser = "device_bulk_parser"
-
-    @classmethod
-    def device_bulk_parser(cls, device):
-        """We ensure that a json-parseable string gets passed up the stack."""
-        retval = device
-        retval = json.dumps(json.loads(device))
-        return retval
