@@ -2,8 +2,29 @@ Changelog
 =========
 
 
-v5.0.0
+v5.1.0
 ------
+
+New
+~~~
+- Include version-specific converters. [Ash Wilson]
+
+  This allows us to, for instance, ensure that all
+  GPS coordinates are returned as float-type values,
+  across all database versions, no matter how they
+  were originally stored in the database.
+
+  Closes #22
+- Support v4 as well as v5 Kismet databases. [Ash Wilson]
+
+  Closes #19
+- Add ``kismet_log_devices_to_filebeat_json``. [Ash Wilson]
+
+  Closes #17
+
+
+v5.0.0 (2019-02-12)
+-------------------
 
 New
 ~~~
