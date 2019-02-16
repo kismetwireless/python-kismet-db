@@ -12,14 +12,17 @@ parsing keyword arguments for filtering in the SQL query. These items tie into
 functions that live in the Utility class, and are used for forming the SQL
 that's used to query the Kismet DB.
 
-This tool follows semantic versioning and the major version of this tool
-should match the version of the installed Kismet DB (found in the ``KISMET``
-table, ``db_version`` column). Minor version is incremented for added features
-within the current major version (perhaps added scripts or support for
-additional tables).
+This tool follows calendar versioning, and new versions support DB schemas as
+far back as v4.
 
-Ideally, if the schema for any table changes, the only required change will be
-in the ``column_names`` or ``bulk_data_field`` variables in the class
-definition. If more query parameters are required, those can be added via the
-``valid_kwargs`` class variable, and tied into the appropriate method in
-the Utility class.
+As the database schema changes, the changes required to support a new version
+of the db will be required on a per-object basis. The following object
+attributes are used to contain version-specific schema information:
+
+* ``field_defaults``: This is used to force a default value for fields that \
+are not found in older-than-current versions of the Kismet DB.
+* ``converters_reference``: This allows us to specify a converter so that if \
+the data type changes between schema versions, we can force the older DB type \
+to match the current DB version's type.
+* ``column_reference``: This describes the expected columns for each supported \
+version of the kismet DB
