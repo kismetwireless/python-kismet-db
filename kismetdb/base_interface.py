@@ -119,8 +119,8 @@ class BaseInterface(object):
     def get_all(self, **kwargs):
         """Get all objects represented by this class from Kismet DB.
 
-        Keyword Args:
-            See class documentation!
+        Keyword arguments are described above, near the beginning of
+        the class documentation.
 
         Returns:
             list: List of each json object from all rows returned from query.
@@ -141,11 +141,8 @@ class BaseInterface(object):
     def get_meta(self, **kwargs):
         """Get metadata columns from DB, excluding bulk data columns.
 
-        For large queries, this will save memory overhead, especially when
-        targeting packet captures.
-
-        Keyword Args:
-            See class documentation!
+        Keyword arguments are described above, near the beginning of
+        the class documentation.
 
         Returns:
             list: List of each json object from all rows returned from query.
@@ -171,10 +168,8 @@ class BaseInterface(object):
     def yield_all(self, **kwargs):
         """Get all objects represented by this class from Kismet DB.
 
-        Yields one row at a time.
-
-        Keyword Args:
-            See class documentation!
+        Yields one row at a time. Keyword arguments are described above,
+        near the beginning of the class documentation.
 
         Yields:
             dict: Dict representing one row from query.
@@ -196,10 +191,8 @@ class BaseInterface(object):
     def yield_meta(self, **kwargs):
         """Yield metadata from DB, excluding bulk data columns.
 
-        Yields one row at a time.
-
-        Keyword Args:
-            See class documentation!
+        Yields one row at a time. Keyword arguments are described above, near
+        the beginning of the class documentation.
 
         Returns:
             dict: Dict representing one row from query.

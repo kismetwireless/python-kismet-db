@@ -13,7 +13,10 @@ def main():
     parser.add_argument("--in", action="store", dest="infile",
                         required=True, help="Input (.kismet) file")
     parser.add_argument("--out", action="store", dest="outfile",
-                        help="Output filename (optional)")
+                        help=("Output filename (optional) for appending. If "
+                              "unspecified, each record will be printed to "
+                              "stdout, one record per line, ideal for piping "
+                              "into filebeat."))
     parser.add_argument("--start-time", action="store", dest="starttime",
                         help="Only list devices seen after given time")
     parser.add_argument("--min-signal", action="store", dest="minsignal",

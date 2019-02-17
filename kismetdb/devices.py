@@ -8,7 +8,9 @@ class Devices(BaseInterface):
 
 
     Unlike other abstractions which contain the object detail under the `json`
-    key, this abstraction contains the details under the key named `device`
+    key, this abstraction contains the details under the key named `device`.
+    The ``Keyword Arguments`` section below applies only to methods which
+    support them (as noted below), not to object instantiation.
 
     Args:
         file_location (str): Path to Kismet log file.
@@ -34,28 +36,6 @@ class Devices(BaseInterface):
             many bytes of data (converted to int).
         bytes_data_lt (str, int): Match devices where we've seen at most this
             many bytes of data (converted to int).
-
-    Attributes:
-        bulk_data_field (str): Field containing bulk data (typically stored
-            as a blob in the DB). This allows the `get_meta()` method to
-            exclude information which may have a performance impact. This
-            is especially true for the retrieval of packet captures.
-        column_names (str): Name of columns expected to be in table represented
-            by this abstraction. Used for validation against columns in
-            DB on instanitation. This is constructed on instantiation, based
-            on the version of DB that's detected.
-        table_name (str): Name of the table this abstraction represents.
-        valid_kwargs (str): This is a dictionary where the key is the name
-            of a keyword argument and the value is a reference to the function
-            which builds the SQL partial and replacement dictionary.
-        field_defaults (dict): Statically set these column defaults by DB
-            version.
-        converters_reference (dict): This provides a reference for converters
-            to use on data coming from the DB on a version by version basis.
-        full_query_column_names (list): Processed column names for full query
-            of kismet DB. Created on instantiation.
-        meta_query_column_names (list): Processed column names for meta query
-            of kismet DB. Created on instantiation.
 
     """
 

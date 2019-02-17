@@ -3,28 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-kismetdb
-========
+Tables
+======
 
-.. include:: ../../README.rst
-
-
-Table of Contents
-=================
+This wrapper presents tables as Python objects.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Tables:
 
-   tables
-   included_scripts
-   testing
-   updating
-   changelog
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   alerts
+   data_sources
+   devices
+   packets
