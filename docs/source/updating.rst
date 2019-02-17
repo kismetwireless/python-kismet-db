@@ -1,5 +1,5 @@
-Updating
-========
+Updating and Extending
+======================
 
 .. toctree::
 
@@ -19,10 +19,11 @@ As the database schema changes, the changes required to support a new version
 of the db will be required on a per-object basis. The following object
 attributes are used to contain version-specific schema information:
 
-* ``field_defaults``: This is used to force a default value for fields that \
-are not found in older-than-current versions of the Kismet DB.
-* ``converters_reference``: This allows us to specify a converter so that if \
-the data type changes between schema versions, we can force the older DB type \
-to match the current DB version's type.
-* ``column_reference``: This describes the expected columns for each supported \
-version of the kismet DB
+* ``field_defaults``: This is used to force a default value for fields that are not found in older-than-current versions of the Kismet DB.
+* ``converters_reference``: This allows us to specify a converter so that if the data type changes between schema versions, we can force the older DB type to match the current DB version's type.
+* ``column_reference``: This describes the expected columns for each supported version of the kismet DB
+
+All objects representing tables inherit from the BaseInterface class:
+
+.. autoclass:: kismetdb.BaseInterface
+   :members: get_meta, get_all, yield_meta, yield_all

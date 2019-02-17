@@ -152,7 +152,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'kismetdb', u'kismetdb Documentation',
-     author, 'kismetdb', 'One line description of project.',
+     author, 'kismetdb', 'Python wrapper for Kismet database.',
      'Miscellaneous'),
 ]
 

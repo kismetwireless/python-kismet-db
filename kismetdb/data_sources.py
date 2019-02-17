@@ -6,6 +6,9 @@ from .utility import Utility
 class DataSources(BaseInterface):
     """This object covers data sources stored in the Kismet DB.
 
+    The ``Keyword Arguments`` section below applies only to methods which
+    support them (as noted below), not to object instantiation.
+
     Args:
         file_location (str): Path to Kismet log file.
 
@@ -15,29 +18,6 @@ class DataSources(BaseInterface):
         definition (str, list): Data source definition.
         name (str, list): Name of data source.
         interface (str, list): Interface associated with data source.
-
-    Attributes:
-        bulk_data_field (str): Field containing bulk data (typically stored
-            as a blob in the DB). This allows the `get_meta()` method to
-            exclude information which may have a performance impact. This
-            is especially true for the retrieval of packet captures.
-        column_names (str): Name of columns expected to be in table represented
-            by this abstraction. Used for validation against columns in
-            DB on instanitation. This is constructed on instantiation, based
-            on the version of DB that's detected.
-        table_name (str): Name of the table this abstraction represents.
-        valid_kwargs (str): This is a dictionary where the key is the name
-            of a keyword argument and the value is a reference to the function
-            which builds the SQL partial and replacement dictionary.
-        field_defaults (dict): Statically set these column defaults by DB
-            version.
-        converters_reference (dict): This provides a reference for converters
-            to use on data coming from the DB on a version by version basis.
-        full_query_column_names (list): Processed column names for full query
-            of kismet DB. Created on instantiation.
-        meta_query_column_names (list): Processed column names for meta query
-            of kismet DB. Created on instantiation.
-
     """
 
     table_name = "datasources"

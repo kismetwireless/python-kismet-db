@@ -1,5 +1,5 @@
-Kismet DB abstraction
-=====================
+Kismet database wrapper
+_______________________
 
 
 .. image:: https://readthedocs.org/projects/kismetdb/badge/?version=latest
@@ -41,16 +41,17 @@ Alongside the Python library, several commands are installed:
 * ``kismet_log_to_csv``
 * ``kismet_log_to_kml``
 * ``kismet_log_to_pcap``
+* ``kismet_log_devices_to_filebeat_json``
 
 Following any of the prior commands with ``--help`` will provide details on
-usage
+usage.
 
 
 Testing
 -------
 
 In order to test, you must place a kismet sqlite log file at
-``tests/assets/testdata.kismet_4`` and ``tests/assets/testdata.kismet_4``,
+``tests/assets/testdata.kismet_4`` and ``tests/assets/testdata.kismet_5``,
 which are Kismet version 4 and 5 databases, respectively.
 
 Testing happens in a Docker build process:
