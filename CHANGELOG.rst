@@ -2,8 +2,9 @@ Changelog
 =========
 
 
-v2019.02.01
+v2019.03.01
 -----------
+- Add license file now that it's a submodule. [Mike Kershaw / Dragorn]
 - Minor commit to trigger mirror. [Mike Kershaw / Dragorn]
 
 
