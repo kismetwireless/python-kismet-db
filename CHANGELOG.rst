@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v2019.05.01
+-----------
+- Update for version 6 of the database. [Mike Kershaw / Dragorn ]
+
 
 v2019.02.01
 -----------
