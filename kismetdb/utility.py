@@ -200,6 +200,61 @@ class Utility(object):
         return (sql, replacement)
 
     @classmethod
+    def generate_single_string_sql_includes(cls, column_name, filter_value):
+        """Return tuple with sql and replacement.
+
+        This function builds the sql partial and replacement dict for
+        an inclusion (LIKE %VALUE%) match for one value against a single 
+        column in the database.
+
+        Args:
+            column_name (str): Name of column in DB.
+            filter_value (str): This is what we look for in the column.
+
+        Returns:
+            tuple: Item 0 contains the SQL partial string. Item 1 contains
+                the replacement dictionary.
+
+        """
+        sql = "{} LIKE :{}".format(column_name, column_name)
+        replacement = {column_name: '%{}%'.format(str(filter_value))}
+        return (sql, replacement)
+
+    @classmethod
+    def generate_multi_string_sql_includes(cls, column_name, filter_values):
+        """Return tuple with sql and replacement.
+
+        This function builds the sql partial and replacement dict for
+        an inclusion (LIKE %VALUE%) match for multiple values (OR) against 
+        a single column in the database.
+
+        Args:
+        column_name (str): Name of column in DB.
+        filter_values (list or str): This is what we look for in the column.
+            If a string-type object is used for this argument, this function
+            behaves as a wrapper for 
+            `Utility.generate_single_string_sql_includes()`
+
+        Returns:
+            tuple: Item 0 contains the SQL partial string. Item 1 contains
+                the replacement dictionary.
+
+        """
+        if not isinstance(filter_values, list):
+            return cls.generate_single_string_sql_eq(column_name,
+                                                     filter_values)
+        sql_parts = []
+        replacement = {}
+        increment = 1
+        for filter_value in filter_values:
+            colref = "{}{}".format(column_name, str(increment))
+            sql_parts.append("{} LIKE :{}".format(column_name, colref))
+            replacement[colref] = '%{}%'.format(str(filter_value))
+            increment += 1
+        sql = "( {} )".format(" OR ".join(sql_parts))
+        return (sql, replacement)
+
+    @classmethod
     def generate_single_int_sql_eq(cls, column_name, filter_value):
         """Return tuple with sql and replacement.
 
@@ -265,6 +320,74 @@ class Utility(object):
         column_name_corrected = column_name.replace("_lt", "")
         sql = "{} < :{}".format(column_name_corrected, column_name_corrected)
         replacement = {column_name_corrected: int(filter_value)}
+        return (sql, replacement)
+
+    @classmethod
+    def generate_single_float_sql_eq(cls, column_name, filter_value):
+        """Return tuple with sql and replacement.
+
+        This function builds the sql partial and replacement dict for
+        an equivalency match for a single float against a single
+        column in the database.
+
+        Args:
+            column_name (str): Name of column in DB.
+            filter_value (str or float): This is what we look for in the column.
+                Coerced to float.
+
+        Returns:
+            tuple: Item 0 contains the SQL partial string. Item 1 contains
+                the replacement dictionary.
+
+
+        """
+        sql = "{} = :{}".format(column_name, column_name)
+        replacement = {column_name: float(filter_value)}
+        return (sql, replacement)
+
+    @classmethod
+    def generate_single_float_sql_gt(cls, column_name, filter_value):
+        """Return tuple with sql and replacement.
+
+        This function builds the sql partial and replacement dict for
+        a greater-than match for a single float against a single
+        column in the database.
+
+        Args:
+            column_name (str): Name of column in DB.
+            filter_value (str or float): This is what we look for in the column.
+                Coerced to float.
+
+        Returns:
+            tuple: Item 0 contains the SQL partial string. Item 1 contains
+                the replacement dictionary.
+
+        """
+        column_name_corrected = column_name.replace("_gt", "")
+        sql = "{} > :{}".format(column_name_corrected, column_name_corrected)
+        replacement = {column_name_corrected: float(filter_value)}
+        return (sql, replacement)
+
+    @classmethod
+    def generate_single_float_sql_lt(cls, column_name, filter_value):
+        """Return tuple with sql and replacement.
+
+        This function builds the sql partial and replacement dict for
+        a less-than match for a single integer against a single
+        column in the database.
+
+        Args:
+            column_name (str): Name of column in DB.
+            filter_value (str or float): This is what we look for in the column.
+                Coerced to float.
+
+        Returns:
+            tuple: Item 0 contains the SQL partial string. Item 1 contains
+                the replacement dictionary.
+        """
+        column_name_corrected = column_name.replace("_lt", "")
+        sql = "{} < :{}".format(column_name_corrected, column_name_corrected)
+        replacement = {column_name_corrected: float(filter_value)}
         return (sql, replacement)
 
     @classmethod
