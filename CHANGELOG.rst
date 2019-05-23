@@ -8,6 +8,7 @@ v2019.05.02
 - Add kismet server info class [Mike Kershaw / Dragorn]
 - Add various utility sql classes for float/string-like [Mike Kershaw / Dragorn]
 
+
 v2019.05.01
 -----------
 - Update for version 6 of the database. [Mike Kershaw / Dragorn]
@@ -22,7 +23,7 @@ v5.1.0 (2019-02-16)
 -------------------
 
 New
-~~~
+
 - Include version-specific converters. [Ash Wilson]
 
   This allows us to, for instance, ensure that all
@@ -43,7 +44,7 @@ v5.0.0 (2019-02-12)
 -------------------
 
 New
-~~~
+
 - Support v5 schema. [Ash Wilson]
 
 
@@ -51,7 +52,7 @@ v4.0.3 (2019-02-05)
 -------------------
 
 Changes
-~~~~~~~
+
 - Updated docs, added simplekml requirement. [Ash Wilson]
 
   Closes #8
