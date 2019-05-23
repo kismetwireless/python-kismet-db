@@ -37,11 +37,14 @@ class BaseInterface(object):
     table_name = "KISMET"
     bulk_data_field = ""
     field_defaults = {4: {},
-                      5: {}}
+                      5: {},
+                      6: {}}
     converters_reference = {4: {},
-                            5: {}}
+                            5: {},
+                            6: {}}
     column_reference = {4: ["kismet_version", "db_version", "db_module"],
-                        5: ["kismet_version", "db_version", "db_module"]}
+                        5: ["kismet_version", "db_version", "db_module"],
+                        6: ["kismet_version", "db_version", "db_module"]}
     valid_kwargs = {}
 
     def __init__(self, file_location):
