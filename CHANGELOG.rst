@@ -1,9 +1,16 @@
 Changelog
 =========
 
+v2019.05.02
+-----------
+- More default support for v6 [Mike Kershaw / Dragorn]
+- Add snapshots class [Mike Kershaw / Dragorn]
+- Add kismet server info class [Mike Kershaw / Dragorn]
+- Add various utility sql classes for float/string-like [Mike Kershaw / Dragorn]
+
 v2019.05.01
 -----------
-- Update for version 6 of the database. [Mike Kershaw / Dragorn ]
+- Update for version 6 of the database. [Mike Kershaw / Dragorn]
 
 
 v2019.02.01
