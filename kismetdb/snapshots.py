@@ -17,10 +17,10 @@ class Snapshots(BaseInterface):
             query.
         ts_sec_lt (str, datetime, or (secs, usecs)): Timestamp for ending
             query.
-        lat_gt (str, double): Bounding minimum latitude
-        lat_lt (str, double): Bounding maximum latitude
-        lon_gt (str, double): Bounding minimum longitude
-        lon_lt (str, double): Bounding maximum longitude
+        lat_gt (str, float): Bounding minimum latitude
+        lat_lt (str, float): Bounding maximum latitude
+        lon_gt (str, float): Bounding minimum longitude
+        lon_lt (str, float): Bounding maximum longitude
         snaptype (str): Snapshot type
     """
 
