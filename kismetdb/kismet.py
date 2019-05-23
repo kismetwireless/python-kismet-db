@@ -8,10 +8,20 @@ from .utility import Utility
 
 class Kismet(Snapshots):
     """This object extracts kismet server info from the first SYSTEM 
-    snapshot in the database.
+    snapshot in the database.  All values reference the Kismet
+    server which generated this log.
 
     Args:
         file_location (str): Path to Kismet log file.
+
+    Attributes:
+        kismet_version (str): Kismet version
+        kismet_git (str): Kismet git commit string
+        kismet_uuid (str): UUID of server
+        kismet_name (str): User-supplied name of server
+        kismet_location (str): User-supplied server location
+        kismet_description (str): User-supplied server description
+        kismet_user (str): Username server was running under
     """
     
     def __init__(self, filepath):
