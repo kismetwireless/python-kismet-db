@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = u'kismetdb'
-copyright = u'2019, Ash Wilson'
-author = u'Ash Wilson'
+copyright = u'2019, Ash Wilson, Mike Kershaw'
+author = u'Ash Wilson, Mike Kershaw'
 
 # The short X.Y version
 version = u''
