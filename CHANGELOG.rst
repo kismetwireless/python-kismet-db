@@ -2,8 +2,29 @@ Changelog
 =========
 
 
-v5.1.0
-------
+v2019.05.02
+-----------
+- Make RST doc levels happy. [Mike Kershaw / Dragorn]
+- Hopefully make docs happy. [Mike Kershaw / Dragorn]
+- Add self to docs. [Mike Kershaw / Dragorn]
+- Fix changelog. [Mike Kershaw / Dragorn]
+- Fix RST? [Mike Kershaw / Dragorn]
+- Docs. [Mike Kershaw / Dragorn]
+- Ignore vim. [Mike Kershaw / Dragorn]
+- Enable classes Bump version Add integer version. [Mike Kershaw /
+  Dragorn]
+- Add snapshots class Add kismet class for server info derived from
+  snapshots. [Mike Kershaw / Dragorn]
+- Add float comparators Add string LIKE comparators. [Mike Kershaw /
+  Dragorn]
+- Add defaults for db6. [Mike Kershaw / Dragorn]
+- Add support for database version 6. [Mike Kershaw / Dragorn]
+- Add license file now that it's a submodule. [Mike Kershaw / Dragorn]
+- Minor commit to trigger mirror. [Mike Kershaw / Dragorn]
+
+
+v5.1.0 (2019-02-16)
+-------------------
 
 New
 ~~~

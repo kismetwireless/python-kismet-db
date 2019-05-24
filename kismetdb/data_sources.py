@@ -23,12 +23,16 @@ class DataSources(BaseInterface):
     table_name = "datasources"
     bulk_data_field = "json"
     field_defaults = {4: {},
-                      5: {}}
+                      5: {},
+                      6: {}}
     converters_reference = {4: {},
-                            5: {}}
+                            5: {},
+                            6: {}}
     column_reference = {4: ["uuid", "typestring", "definition", "name",
                             "interface", "json"],
                         5: ["uuid", "typestring", "definition", "name",
+                            "interface", "json"],
+                        6: ["uuid", "typestring", "definition", "name",
                             "interface", "json"]}
     valid_kwargs = {"uuid": Utility.generate_multi_string_sql_eq,
                     "typestring": Utility.generate_multi_string_sql_eq,

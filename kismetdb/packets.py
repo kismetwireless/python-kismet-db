@@ -40,10 +40,12 @@ class Packets(BaseInterface):
     field_defaults = {4: {"alt": 0,
                           "speed": 0,
                           "heading": 0},
-                      5: {}}
+                      5: {},
+                      6: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon},
-                            5: {}}
+                            5: {},
+                            6: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "sourcemac",
                             "destmac", "transmac", "frequency", "devkey",
                             "lat", "lon", "packet_len", "signal", "datasource",
@@ -52,7 +54,12 @@ class Packets(BaseInterface):
                             "destmac", "transmac", "frequency", "devkey",
                             "lat", "lon", "alt", "speed", "heading",
                             "packet_len", "signal", "datasource", "dlt",
-                            "packet", "error"]}
+                            "packet", "error"],
+                        6: ["ts_sec", "ts_usec", "phyname", "sourcemac",
+                            "destmac", "transmac", "frequency", "devkey",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "packet_len", "signal", "datasource", "dlt",
+                            "packet", "error", "tags"]}
     valid_kwargs = {"ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devkey": Utility.generate_multi_string_sql_eq,
@@ -63,4 +70,5 @@ class Packets(BaseInterface):
                     "devmac": Utility.generate_multi_string_sql_eq,
                     "datasource": Utility.generate_multi_string_sql_eq,
                     "min_signal": Utility.generate_single_int_sql_gt,
-                    "dlt_gt": Utility.generate_single_int_sql_gt}
+                    "dlt_gt": Utility.generate_single_int_sql_gt,
+                    "tags": Utility.generate_multi_string_sql_eq}

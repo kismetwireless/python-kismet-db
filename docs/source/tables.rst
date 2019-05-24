@@ -15,4 +15,6 @@ This wrapper presents tables as Python objects.
    alerts
    data_sources
    devices
+   kismet
    packets
+   snapshots

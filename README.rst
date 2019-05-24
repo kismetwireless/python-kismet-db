@@ -1,6 +1,5 @@
 Kismet database wrapper
-_______________________
-
+=======================
 
 .. image:: https://readthedocs.org/projects/kismetdb/badge/?version=latest
    :target: https://kismetdb.readthedocs.io/en/latest/?badge=latest
@@ -10,7 +9,9 @@ _______________________
 Quickstart
 ----------
 
-Install with `pip install .`
+Install from PyPI with ``pip install kismetdb``
+
+Install from source with with ``pip install .``
 
 In the Python interpreter:
 
