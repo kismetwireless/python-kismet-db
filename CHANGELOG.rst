@@ -1,21 +1,25 @@
 Changelog
 =========
 
+
 v2019.05.02
 -----------
-- More default support for v6 [Mike Kershaw / Dragorn]
-- Add snapshots class [Mike Kershaw / Dragorn]
-- Add kismet server info class [Mike Kershaw / Dragorn]
-- Add various utility sql classes for float/string-like [Mike Kershaw / Dragorn]
-
-
-v2019.05.01
------------
-- Update for version 6 of the database. [Mike Kershaw / Dragorn]
-
-
-v2019.02.01
------------
+- Make RST doc levels happy. [Mike Kershaw / Dragorn]
+- Hopefully make docs happy. [Mike Kershaw / Dragorn]
+- Add self to docs. [Mike Kershaw / Dragorn]
+- Fix changelog. [Mike Kershaw / Dragorn]
+- Fix RST? [Mike Kershaw / Dragorn]
+- Docs. [Mike Kershaw / Dragorn]
+- Ignore vim. [Mike Kershaw / Dragorn]
+- Enable classes Bump version Add integer version. [Mike Kershaw /
+  Dragorn]
+- Add snapshots class Add kismet class for server info derived from
+  snapshots. [Mike Kershaw / Dragorn]
+- Add float comparators Add string LIKE comparators. [Mike Kershaw /
+  Dragorn]
+- Add defaults for db6. [Mike Kershaw / Dragorn]
+- Add support for database version 6. [Mike Kershaw / Dragorn]
+- Add license file now that it's a submodule. [Mike Kershaw / Dragorn]
 - Minor commit to trigger mirror. [Mike Kershaw / Dragorn]
 
 
@@ -23,7 +27,7 @@ v5.1.0 (2019-02-16)
 -------------------
 
 New
-
+~~~
 - Include version-specific converters. [Ash Wilson]
 
   This allows us to, for instance, ensure that all
@@ -44,7 +48,7 @@ v5.0.0 (2019-02-12)
 -------------------
 
 New
-
+~~~
 - Support v5 schema. [Ash Wilson]
 
 
@@ -52,7 +56,7 @@ v4.0.3 (2019-02-05)
 -------------------
 
 Changes
-
+~~~~~~~
 - Updated docs, added simplekml requirement. [Ash Wilson]
 
   Closes #8

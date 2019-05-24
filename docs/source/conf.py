@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import re
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -16,17 +18,49 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+# -- Helper Functions --------------------------------------------------------
+
+
+def read_file(fname):
+    """Return file contents as a string."""
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
+def get_version():
+    """Return version from init file."""
+    raw_init_file = read_file("../../{}/__init__.py".format(project))
+    rx_compiled = re.compile(r"\s*__version__\s*=\s*\"(\S+)\"")
+    ver = rx_compiled.search(raw_init_file).group(1)
+    return ver
+
+
+def get_author():
+    """Get author from __init__.py."""
+    raw_init_file = read_file("../../{}/__init__.py".format(project))
+    rx_compiled = re.compile(r"\s*__author__\s*=\s*\"(.*)\"")
+    auth = rx_compiled.search(raw_init_file).group(1)
+    return auth
+
+
+def get_copyright():
+    """Get copyright from __init__.py."""
+    raw_init_file = read_file("../../{}/__init__.py".format(project))
+    rx_compiled = re.compile(r"\s*__copyright__\s*=\s*\"(.*)\"")
+    cright = rx_compiled.search(raw_init_file).group(1)
+    return cright
+
 
 # -- Project information -----------------------------------------------------
-
 project = u'kismetdb'
-copyright = u'2019, Ash Wilson, Mike Kershaw'
-author = u'Ash Wilson, Mike Kershaw'
 
 # The short X.Y version
-version = u''
+version = get_version()
 # The full version, including alpha/beta/rc tags
-release = u''
+release = get_version()
+
+copyright = get_copyright()
+
+author = get_author()
 
 
 # -- General configuration ---------------------------------------------------
