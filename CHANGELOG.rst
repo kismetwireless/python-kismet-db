@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v2019.05.04
+-----------
+- Add DataPackets handler [Mike Kershaw / Dragorn]
+
 v2019.05.03
 -----------
 - Fix JSON blob type extractor for DataSources [Ash Wilson]

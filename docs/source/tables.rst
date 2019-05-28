@@ -13,6 +13,7 @@ This wrapper presents tables as Python objects.
    :caption: Tables:
 
    alerts
+   data_packets
    data_sources
    devices
    kismet
