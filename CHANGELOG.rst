@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v2019.05.03
+-----------
+- Fix JSON blob type extractor for DataSources [Ash Wilson]
+
+  Closes #3
+- Add JSON blob type extractor for Snapshots [Mike Kershaw / Dragorn]
 
 v2019.05.02
 -----------
