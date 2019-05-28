@@ -25,9 +25,9 @@ class DataSources(BaseInterface):
     field_defaults = {4: {},
                       5: {},
                       6: {}}
-    converters_reference = {4: {},
-                            5: {},
-                            6: {}}
+    converters_reference = {4: {"json": Utility.device_field_parser},
+                            5: {"json": Utility.device_field_parser},
+                            6: {"json": Utility.device_field_parser}}
     column_reference = {4: ["uuid", "typestring", "definition", "name",
                             "interface", "json"],
                         5: ["uuid", "typestring", "definition", "name",
