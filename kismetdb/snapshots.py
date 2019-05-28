@@ -30,9 +30,11 @@ class Snapshots(BaseInterface):
                       5: {},
                       6: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
-                                "lon": Utility.format_int_as_latlon},
-                            5: {},
-                            6: {}}
+                                "lon": Utility.format_int_as_latlon,
+                                "json": Utility.device_field_parser},
+                            5: {"json": Utility.device_field_parser},
+                            6: {"json": Utility.device_field_parser}
+                            }
     column_reference = {4: ["ts_sec", "ts_usec", "snaptype", "json"],
                         5: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
                         6: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
