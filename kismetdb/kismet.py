@@ -5,6 +5,9 @@ import json
 import sqlite3
 from .utility import Utility
 
+class KismetException(Exception):
+    """ Raised when the kismetdb file lacks required Kismet data """
+    pass
 
 class Kismet(Snapshots):
     """This object extracts kismet server info from the first SYSTEM 
@@ -33,6 +36,8 @@ class Kismet(Snapshots):
         cur = db.cursor()
         cur.execute(sql)
         row = cur.fetchone()
+        if row == None:
+            raise KismetException("No system snapshots in kismetdb log; malformed, or runt log likely")
         result = row["json"]
         db.close()
 

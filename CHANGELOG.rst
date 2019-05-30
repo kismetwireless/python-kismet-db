@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v2019.05.05
+-----------
+- Handle missing SYSTEM snapshots during Kismet processing [Mike Kershaw / Dragorn]
+
 v2019.05.04
 -----------
 - Add DataPackets handler [Mike Kershaw / Dragorn]
