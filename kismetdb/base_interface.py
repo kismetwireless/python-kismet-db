@@ -20,6 +20,9 @@ class BaseInterface(object):
         column_names (list): Name of columns expected to be in this object's
             table by this abstraction. Used for validation against columns in
             DB on instanitation.
+        column_map (dict): The keys are column names, and the values are
+            special handlers which allow enhanced filtering in database
+            queries.
         table_name (str): Name of the table this abstraction represents.
         valid_kwargs (str): This is a dictionary where the key is the name
             of a keyword argument and the value is a reference to the function
@@ -32,10 +35,13 @@ class BaseInterface(object):
             of kismet DB. Created on instantiation.
         meta_query_column_names (list): Processed column names for meta query
             of kismet DB. Created on instantiation.
+        super_columns (dict): Pseudo-columns and relative queries are defined
+            here using objects like ``ColumnConplexTimestamp``.
 
     """
     table_name = "KISMET"
     bulk_data_field = ""
+    column_map = {}
     field_defaults = {4: {},
                       5: {},
                       6: {}}
@@ -46,6 +52,7 @@ class BaseInterface(object):
                         5: ["kismet_version", "db_version", "db_module"],
                         6: ["kismet_version", "db_version", "db_module"]}
     valid_kwargs = {}
+    super_columns = {}
 
     def __init__(self, file_location):
         self.check_db_exists(file_location)
@@ -55,6 +62,7 @@ class BaseInterface(object):
         self.check_column_names(file_location)
         self.full_query_column_names = self.get_query_column_names()
         self.meta_query_column_names = self.get_meta_query_column_names()
+        self.mapped_columns = list(self.column_map.keys())
 
     def get_db_version(self):
         sql = "SELECT db_version from KISMET"
@@ -77,11 +85,11 @@ class BaseInterface(object):
 
         """
         result = []
-        converter_reference = self.converters_reference[self.db_version]
+        converters_reference = self.converters_reference[self.db_version]
         column_reference = self.column_reference[self.db_version]
         for col in column_reference:
-            if col in converter_reference.keys():
-                result.append("{} as \"{} [{}]\"".format(col, col, col))
+            if col in converters_reference.keys():
+                result.append("{col} as \"{col} [{col}]\"".format(col=col))
             else:
                 result.append(col)
         return result
@@ -96,28 +104,39 @@ class BaseInterface(object):
 
         """
         result = []
-        converter_reference = self.converters_reference[self.db_version]
+        converters_reference = self.converters_reference[self.db_version]
         column_reference = self.column_reference[self.db_version]
         for col in column_reference:
             if col == self.bulk_data_field:
                 continue
-            elif col in converter_reference.keys():
-                result.append("{} as \"{} [{}]\"".format(col, col, col))
+            elif col in converters_reference.keys():
+                result.append("{col} as \"{col} [{col}]\"".format(col=col))
             else:
                 result.append(col)
         return result
 
-    def generate_parts_and_replacements(self, filters):
+    def generate_cols_parts_and_replacements(self, filters, columns):
         """Return tuple with sql parts and replacements."""
+        cols = columns
         query_parts = []
         replacements = {}
         for k, v in list(filters.items()):
-            if k not in self.valid_kwargs:
+            if k not in self.valid_kwargs and k not in self.super_columns:
                 continue
-            results = self.valid_kwargs[k](k, v)
-            query_parts.append(results[0])
-            replacements.update(results[1])
-        return (query_parts, replacements)
+            if k in self.super_columns:
+                super_column = self.super_columns[k]
+                col_name = super_column.gen_select_field(k)
+                if col_name not in cols:
+                    cols.append(col_name)
+                query_part = super_column.gen_sql_query(k)
+                if query_part not in query_parts:
+                    query_parts.append(query_part)
+                replacements.update({k.split("_")[0]: v})
+            else:
+                results = self.valid_kwargs[k](k, v)
+                query_parts.append(results[0])
+                replacements.update(results[1])
+        return (cols, query_parts, replacements)
 
     def get_all(self, **kwargs):
         """Get all objects represented by this class from Kismet DB.
@@ -125,18 +144,18 @@ class BaseInterface(object):
         Keyword arguments are described above, near the beginning of
         the class documentation.
 
-        Returns:
+        Return:
             list: List of each json object from all rows returned from query.
         """
 
         if kwargs:
-            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+            cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.full_query_column_names)  # NOQA
         else:
+            cols = self.full_query_column_names
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.full_query_column_names),  # NOQA
-                                         self.table_name)
+        sql = "SELECT {} FROM {}".format(", ".join(cols), self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
         return self.get_rows(self.column_names, sql, replacements)
@@ -157,13 +176,13 @@ class BaseInterface(object):
         columns.remove(self.bulk_data_field)
 
         if kwargs:
-            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+            cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.meta_query_column_names)  # NOQA
         else:
+            cols = self.meta_query_column_names
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.meta_query_column_names),  # NOQA
-                                         self.table_name)
+        sql = "SELECT {} FROM {}".format(", ".join(cols), self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
         return self.get_rows(columns, sql, replacements)
@@ -179,13 +198,13 @@ class BaseInterface(object):
         """
 
         if kwargs:
-            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+            cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.full_query_column_names)  # NOQA
         else:
+            cols = self.full_query_column_names
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.full_query_column_names),  # NOQA
-                                         self.table_name)
+        sql = "SELECT {} FROM {}".format(", ".join(cols), self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
         for row in self.yield_rows(self.column_names, sql, replacements):
@@ -207,13 +226,13 @@ class BaseInterface(object):
         columns.remove(self.bulk_data_field)
 
         if kwargs:
-            query_parts, replacements = self.generate_parts_and_replacements(kwargs)  # NOQA
+            cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.meta_query_column_names)  # NOQA
         else:
+            cols = self.meta_query_column_names
             query_parts = []
             replacements = {}
 
-        sql = "SELECT {} FROM {}".format(", ".join(self.meta_query_column_names),  # NOQA
-                                         self.table_name)
+        sql = "SELECT {} FROM {}".format(", ".join(cols), self.table_name)
         if query_parts:
             sql = sql + " WHERE " + " AND ".join(query_parts)
         for row in self.yield_rows(columns, sql, replacements):

@@ -7,6 +7,8 @@ from dateutil import parser as dateparser
 
 
 class Utility(object):
+    """General utilities."""
+
     @classmethod
     def timestamp_to_iso(cls, timestamp):
         """Return an ISO-formatted timestamp for unix ``timestamp``."""
@@ -24,7 +26,7 @@ class Utility(object):
                 expect a tuple of length 2 and both items should be type:
                 `int`.
 
-        Returns:
+        Return:
             tuple: (secs, u_secs)
         """
         t_tup = (0, 0)
@@ -54,7 +56,7 @@ class Utility(object):
         Args:
             timestamp (datetime.datetime): Python datetime.datetime object.
 
-        Returns:
+        Return:
             tup: (seconds, u_seconds)
         """
         epoch = datetime.datetime.utcfromtimestamp(0)
@@ -69,7 +71,7 @@ class Utility(object):
         Args:
             timestamp (str): String-formatted timestamp.
 
-        Returns:
+        Return:
             tup: (t_tuple, err). t_tuple is a pair of integers for seconds
                 and u_seconds. err is a string describing errors in
                 parsing, if any. Successful parsing means that err is an
@@ -157,7 +159,7 @@ class Utility(object):
             column_name (str): Name of column in DB.
             filter_value (str): This is what we look for in the column.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -180,7 +182,7 @@ class Utility(object):
             If a string-type object is used for this argument, this function
             behaves as a wrapper for `Utility.generate_single_string_sql_eq()`
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -204,14 +206,14 @@ class Utility(object):
         """Return tuple with sql and replacement.
 
         This function builds the sql partial and replacement dict for
-        an inclusion (LIKE %VALUE%) match for one value against a single 
+        an inclusion (LIKE %VALUE%) match for one value against a single
         column in the database.
 
         Args:
             column_name (str): Name of column in DB.
             filter_value (str): This is what we look for in the column.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -225,17 +227,17 @@ class Utility(object):
         """Return tuple with sql and replacement.
 
         This function builds the sql partial and replacement dict for
-        an inclusion (LIKE %VALUE%) match for multiple values (OR) against 
+        an inclusion (LIKE %VALUE%) match for multiple values (OR) against
         a single column in the database.
 
         Args:
         column_name (str): Name of column in DB.
         filter_values (list or str): This is what we look for in the column.
             If a string-type object is used for this argument, this function
-            behaves as a wrapper for 
+            behaves as a wrapper for
             `Utility.generate_single_string_sql_includes()`
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -459,11 +461,10 @@ class Utility(object):
     @classmethod
     def is_it_a_string(cls, target):
         """Return boolean True if target is a string, else return False."""
-
         if sys.version_info < (3, 0):
-            result = True if isinstance(target, basestring) else False  # NOQA
+            result = bool(isinstance(target, basestring))
         else:
-            result = True if isinstance(target, (str, bytes)) else False
+            result = bool(isinstance(target, (str, bytes)))
         return result
 
     @classmethod

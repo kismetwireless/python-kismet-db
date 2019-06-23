@@ -1,5 +1,6 @@
 """Packets abstraction."""
 from .base_interface import BaseInterface
+from .column_complex_timestamp import ColumnComplexTimestamp
 from .utility import Utility
 
 
@@ -20,6 +21,10 @@ class Packets(BaseInterface):
         file_location (str): Path to Kismet log file.
 
     Keyword args:
+        ts_gt (float): Match all packets newer than this unix timestamp, which
+            is a composition of ts_sec and ts_usec columns.
+        ts_lt (float): Match all packets older than this unix timestamp, which
+            is a composition of ts_sec and ts_usec columns.
         ts_sec_lt (str, datetime.datetime): Match packets where the timestamp
             is before this.
         ts_sec_gt (str, datetime.datetime): Match packets where the timestamp
@@ -72,3 +77,5 @@ class Packets(BaseInterface):
                     "min_signal": Utility.generate_single_int_sql_gt,
                     "dlt_gt": Utility.generate_single_int_sql_gt,
                     "tags": Utility.generate_multi_string_sql_eq}
+    super_columns = {"ts_gt": ColumnComplexTimestamp("ts_sec", "ts_usec"),
+                     "ts_lt": ColumnComplexTimestamp("ts_sec", "ts_usec")}
