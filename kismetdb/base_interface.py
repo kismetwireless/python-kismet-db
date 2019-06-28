@@ -1,3 +1,4 @@
+"""Base interface."""
 import os
 import sqlite3
 
@@ -8,7 +9,7 @@ class BaseInterface(object):
     Args:
         file_location (str): Path to Kismet log file.
 
-    Attributes:
+    Attribute:
         bulk_data_field (str): Field containing bulk data (typically stored
             as a blob in the DB). This allows the `get_meta()` method to
             exclude information which may have a performance impact. This
@@ -37,8 +38,8 @@ class BaseInterface(object):
             of kismet DB. Created on instantiation.
         super_columns (dict): Pseudo-columns and relative queries are defined
             here using objects like ``ColumnConplexTimestamp``.
-
     """
+
     table_name = "KISMET"
     bulk_data_field = ""
     column_map = {}
@@ -55,6 +56,7 @@ class BaseInterface(object):
     super_columns = {}
 
     def __init__(self, file_location):
+        """Initialize with ``file_location``."""
         self.check_db_exists(file_location)
         self.db_file = file_location
         self.db_version = self.get_db_version()
@@ -65,14 +67,16 @@ class BaseInterface(object):
         self.mapped_columns = list(self.column_map.keys())
 
     def get_db_version(self):
+        """Return the database version."""
         sql = "SELECT db_version from KISMET"
-        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
-        db.row_factory = sqlite3.Row
-        cur = db.cursor()
+        dbase = sqlite3.connect(self.db_file,
+                                detect_types=sqlite3.PARSE_COLNAMES)
+        dbase.row_factory = sqlite3.Row
+        cur = dbase.cursor()
         cur.execute(sql)
         row = cur.fetchone()
         result = row["db_version"]
-        db.close()
+        dbase.close()
         return int(result)
 
     def get_query_column_names(self):
@@ -120,20 +124,20 @@ class BaseInterface(object):
         cols = columns
         query_parts = []
         replacements = {}
-        for k, v in list(filters.items()):
-            if k not in self.valid_kwargs and k not in self.super_columns:
+        for key, val in list(filters.items()):
+            if key not in self.valid_kwargs and key not in self.super_columns:
                 continue
-            if k in self.super_columns:
-                super_column = self.super_columns[k]
-                col_name = super_column.gen_select_field(k)
+            if key in self.super_columns:
+                super_column = self.super_columns[key]
+                col_name = super_column.gen_select_field(key)
                 if col_name not in cols:
                     cols.append(col_name)
-                query_part = super_column.gen_sql_query(k)
+                query_part = super_column.gen_sql_query(key)
                 if query_part not in query_parts:
                     query_parts.append(query_part)
-                replacements.update({k.split("_")[0]: v})
+                replacements.update({key.split("_")[0]: val})
             else:
-                results = self.valid_kwargs[k](k, v)
+                results = self.valid_kwargs[key](key, val)
                 query_parts.append(results[0])
                 replacements.update(results[1])
         return (cols, query_parts, replacements)
@@ -147,7 +151,6 @@ class BaseInterface(object):
         Return:
             list: List of each json object from all rows returned from query.
         """
-
         if kwargs:
             cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.full_query_column_names)  # NOQA
         else:
@@ -166,10 +169,9 @@ class BaseInterface(object):
         Keyword arguments are described above, near the beginning of
         the class documentation.
 
-        Returns:
+        Return:
             list: List of each json object from all rows returned from query.
         """
-
         query_parts = []
         replacements = {}
         columns = list(self.column_names)
@@ -193,10 +195,9 @@ class BaseInterface(object):
         Yields one row at a time. Keyword arguments are described above,
         near the beginning of the class documentation.
 
-        Yields:
+        Yield:
             dict: Dict representing one row from query.
         """
-
         if kwargs:
             cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.full_query_column_names)  # NOQA
         else:
@@ -216,15 +217,13 @@ class BaseInterface(object):
         Yields one row at a time. Keyword arguments are described above, near
         the beginning of the class documentation.
 
-        Returns:
+        Return:
             dict: Dict representing one row from query.
         """
-
         query_parts = []
         replacements = {}
         columns = list(self.column_names)
         columns.remove(self.bulk_data_field)
-
         if kwargs:
             cols, query_parts, replacements = self.generate_cols_parts_and_replacements(kwargs, self.meta_query_column_names)  # NOQA
         else:
@@ -245,10 +244,10 @@ class BaseInterface(object):
         Args:
             db_file (str): path to Kismet log file.
 
-        Returns:
+        Return:
             None
 
-        Raises:
+        Raise:
             ValueError: File either does not exist, is not in sqlite3 format,
                 or file is not a valid Kismet log file.
         """
@@ -264,7 +263,6 @@ class BaseInterface(object):
             err = ("This is a valid sqlite3 file, but it does not appear to "
                    "be a valid Kismet log file: {}".format(log_file))
             raise ValueError(err)
-        return
 
     @classmethod
     def get_column_names(cls, log_file, table_name):
@@ -274,15 +272,15 @@ class BaseInterface(object):
             log_file (str): Path to Kismet log file.
             table_name (str): Name of table.
 
-        Returns:
+        Return:
             list: List of column names.
         """
-        db = sqlite3.connect(log_file)
-        db.row_factory = sqlite3.Row
-        cur = db.cursor()
+        dbase = sqlite3.connect(log_file)
+        dbase.row_factory = sqlite3.Row
+        cur = dbase.cursor()
         cur.execute("SELECT * from {} LIMIT 1".format(table_name))
         cols = [d[0] for d in cur.description]
-        db.close()
+        dbase.close()
         return cols
 
     def check_column_names(self, log_file):
@@ -290,10 +288,10 @@ class BaseInterface(object):
 
         Compares column names in DB to expected columns for abstraction.
 
-        Returns:
+        Return:
             None
 
-        Raises:
+        Raise:
             ValueError: Column names are not what we expect them to be.
         """
         column_names = self.get_column_names(log_file, self.table_name)
@@ -303,7 +301,6 @@ class BaseInterface(object):
                                                     self.column_names,
                                                     column_names))
             raise ValueError(err)
-        return
 
     def get_rows(self, column_names, sql, replacements):
         """Return rows from query results as a list of dictionary objects.
@@ -314,22 +311,23 @@ class BaseInterface(object):
             sql (str): SQL statement.
             replacements (dict): Replacements for SQL query.
 
-        Returns:
+        Return:
             list: List of dictionary items.
         """
         static_fields = self.field_defaults[self.db_version]
         results = []
-        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
-        db.row_factory = sqlite3.Row
+        dbase = sqlite3.connect(self.db_file,
+                                detect_types=sqlite3.PARSE_COLNAMES)
+        dbase.row_factory = sqlite3.Row
         for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
             sqlite3.register_converter(field_name, converter)
-        cur = db.cursor()
+        cur = dbase.cursor()
         cur.execute(sql, replacements)
         for row in cur.fetchall():
             result = {x: row[x] for x in column_names}
             result.update(static_fields)
             results.append(result.copy())  # NOQA
-        db.close()
+        dbase.close()
         return results
 
     def yield_rows(self, column_names, sql, replacements):
@@ -341,16 +339,17 @@ class BaseInterface(object):
             sql (str): SQL statement.
             replacements (dict): Replacements for SQL query.
 
-        Yields:
+        Yield:
             dict: Dictionary object representing one row in result of SQL
                 query.
         """
         static_fields = self.field_defaults[self.db_version]
-        db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
-        db.row_factory = sqlite3.Row
+        dbase = sqlite3.connect(self.db_file,
+                                detect_types=sqlite3.PARSE_COLNAMES)
+        dbase.row_factory = sqlite3.Row
         for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
             sqlite3.register_converter(field_name, converter)
-        cur = db.cursor()
+        cur = dbase.cursor()
         cur.execute(sql, replacements)
         moar_rows = True
         while moar_rows:
@@ -365,5 +364,4 @@ class BaseInterface(object):
             except KeyboardInterrupt:
                 moar_rows = False
                 print("Caught keyboard interrupt, exiting gracefully!")
-        db.close()
-        return
+        dbase.close()

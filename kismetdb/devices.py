@@ -6,7 +6,6 @@ from .utility import Utility
 class Devices(BaseInterface):
     """This object covers devices tracked in the Kismet DB.
 
-
     Unlike other abstractions which contain the object detail under the `json`
     key, this abstraction contains the details under the key named `device`.
     The ``Keyword Arguments`` section below applies only to methods which

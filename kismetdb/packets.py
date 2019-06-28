@@ -7,7 +7,6 @@ from .utility import Utility
 class Packets(BaseInterface):
     """This object covers packets stored in the Kismet DB.
 
-
     The actual packet is stored in the `packet` field of the dictionary
     returned for every row. This can be a very expensive abstraction to
     use if you don't employ some sort of filtering on your query. Consider

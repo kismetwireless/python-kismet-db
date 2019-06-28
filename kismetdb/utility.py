@@ -68,6 +68,7 @@ class Utility(object):
     @classmethod
     def timestamp_string_to_tuple(cls, timestamp):
         """Return a timestamp tuple if possible, and a reason for failure.
+
         Args:
             timestamp (str): String-formatted timestamp.
 
@@ -78,14 +79,14 @@ class Utility(object):
                 empty string.
         """
         err = ""
-        ts = datetime.datetime.utcfromtimestamp(0)
+        tstamp = datetime.datetime.utcfromtimestamp(0)
         epoch = datetime.datetime.utcfromtimestamp(0)
         try:
-            ts = dateparser.parse(timestamp, fuzzy=True)
-        except ValueError as e:
+            tstamp = dateparser.parse(timestamp, fuzzy=True)
+        except ValueError as err:
             err = ("Could not extract a date/time from start-time "
-                   "argument: {}".format(e))
-        secs = str((ts - epoch).total_seconds())
+                   "argument: {}".format(err))
+        secs = str((tstamp - epoch).total_seconds())
         seconds = int(secs.split(".")[0])
         u_seconds = int(secs.split(".")[1]) if len(secs.split(".")) > 1 else 0
         result = (seconds, u_seconds)
@@ -111,7 +112,7 @@ class Utility(object):
 
     @classmethod
     def format_string_match(cls, in_str):
-        """This just returns a string-type for the argument.
+        """Return a string-type for the argument.
 
         This is more or less a placeholder where we may have an opportunity
         to sanitize data at a later date.
@@ -120,7 +121,7 @@ class Utility(object):
 
     @classmethod
     def format_int_match(cls, in_str):
-        """This just returns an integer-type representation for the argument.
+        """Return an integer-type representation for the argument.
 
         This is more or less a placeholder where we may decide to do some
         sanitization at a later date.
@@ -164,7 +165,7 @@ class Utility(object):
                 the replacement dictionary.
 
         """
-        sql = "{} = :{}".format(column_name, column_name)
+        sql = "{column_name} = :{column_name}".format(column_name=column_name)
         replacement = {column_name: str(filter_value)}
         return (sql, replacement)
 
@@ -218,7 +219,7 @@ class Utility(object):
                 the replacement dictionary.
 
         """
-        sql = "{} LIKE :{}".format(column_name, column_name)
+        sql = "{column} LIKE :{column}".format(column=column_name)
         replacement = {column_name: '%{}%'.format(str(filter_value))}
         return (sql, replacement)
 
@@ -269,13 +270,13 @@ class Utility(object):
             filter_value (str or int): This is what we look for in the column.
                 Coerced to integer.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
 
         """
-        sql = "{} = :{}".format(column_name, column_name)
+        sql = "{col} = :{col}".format(col=column_name)
         replacement = {column_name: int(filter_value)}
         return (sql, replacement)
 
@@ -292,13 +293,13 @@ class Utility(object):
             filter_value (str or int): This is what we look for in the column.
                 Coerced to integer.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
         """
         column_name_corrected = column_name.replace("_gt", "")
-        sql = "{} > :{}".format(column_name_corrected, column_name_corrected)
+        sql = "{col} > :{col}".format(col=column_name_corrected)
         replacement = {column_name_corrected: int(filter_value)}
         return (sql, replacement)
 
@@ -315,12 +316,12 @@ class Utility(object):
             filter_value (str or int): This is what we look for in the column.
                 Coerced to integer.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
         """
         column_name_corrected = column_name.replace("_lt", "")
-        sql = "{} < :{}".format(column_name_corrected, column_name_corrected)
+        sql = "{col} < :{col}".format(col=column_name_corrected)
         replacement = {column_name_corrected: int(filter_value)}
         return (sql, replacement)
 
@@ -334,16 +335,16 @@ class Utility(object):
 
         Args:
             column_name (str): Name of column in DB.
-            filter_value (str or float): This is what we look for in the column.
-                Coerced to float.
+            filter_value (str or float): This is what we look for in the
+                column. Coerced to float.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
 
         """
-        sql = "{} = :{}".format(column_name, column_name)
+        sql = "{col} = :{col}".format(col=column_name)
         replacement = {column_name: float(filter_value)}
         return (sql, replacement)
 
@@ -357,16 +358,16 @@ class Utility(object):
 
         Args:
             column_name (str): Name of column in DB.
-            filter_value (str or float): This is what we look for in the column.
-                Coerced to float.
+            filter_value (str or float): This is what we look for in the
+                column. Coerced to float.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
         """
         column_name_corrected = column_name.replace("_gt", "")
-        sql = "{} > :{}".format(column_name_corrected, column_name_corrected)
+        sql = "{col} > :{col}".format(col=column_name_corrected)
         replacement = {column_name_corrected: float(filter_value)}
         return (sql, replacement)
 
@@ -380,15 +381,15 @@ class Utility(object):
 
         Args:
             column_name (str): Name of column in DB.
-            filter_value (str or float): This is what we look for in the column.
-                Coerced to float.
+            filter_value (str or float): This is what we look for in the
+                column. Coerced to float.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
         """
         column_name_corrected = column_name.replace("_lt", "")
-        sql = "{} < :{}".format(column_name_corrected, column_name_corrected)
+        sql = "{col} < :{col}".format(col=column_name_corrected)
         replacement = {column_name_corrected: float(filter_value)}
         return (sql, replacement)
 
@@ -406,7 +407,7 @@ class Utility(object):
                  we look for in the column. Sanitized to Unix epoch for DB
                  compatibility.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -428,7 +429,7 @@ class Utility(object):
                  we look for in the column. Sanitized to Unix epoch for DB
                  compatibility.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 
@@ -450,7 +451,7 @@ class Utility(object):
                  we look for in the column. Sanitized to Unix epoch for DB
                  compatibility.
 
-        Returns:
+        Return:
             tuple: Item 0 contains the SQL partial string. Item 1 contains
                 the replacement dictionary.
 

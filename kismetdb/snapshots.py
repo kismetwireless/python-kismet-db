@@ -34,8 +34,10 @@ class Snapshots(BaseInterface):
                             5: {},
                             6: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "snaptype", "json"],
-                        5: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
-                        6: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
+                        5: ["ts_sec", "ts_usec", "lat", "lon",
+                            "snaptype", "json"],
+                        6: ["ts_sec", "ts_usec", "lat", "lon",
+                            "snaptype", "json"],
                         }
     valid_kwargs = {"ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "ts_sec_lt": Utility.generate_single_tstamp_secs_lt,

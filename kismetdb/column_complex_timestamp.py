@@ -3,6 +3,7 @@
 
 class ColumnComplexTimestamp(object):
     """Formatter for complex timestamp columns."""
+
     def __init__(self, sec, usec):
         """Initialize with names for seconds and useconds columns."""
         self.sec_field = sec
@@ -30,9 +31,9 @@ class ColumnComplexTimestamp(object):
         if comparator == "":
             comparator = "="
         try:
-            query = "{} {} :{}".format(column,
-                                       comparator_reference[comparator],
-                                       column)
+            replacements = {"comparator": comparator_reference[comparator],
+                            "column": column}
+            query = "{column} {comparator} :{column}".format(**replacements)
             return query
         except KeyError:
             raise ValueError("Invalid comparator {}".format(field_name))
