@@ -6,33 +6,43 @@ import sys
 import kismetdb
 
 
-def main():
+def write_pcap_header(file_obj, dlt):
+    """Write a raw pcap file header."""
+    hdr = struct.pack("IHHiIII",
+                      0xa1b2c3d4,  # magic
+                      2, 4,  # version
+                      0,  # offset
+                      0,  # sigfigs
+                      8192,  # max packet len
+                      int(dlt)  # packet type
+                      )
 
-    # Write a raw pcap file header
-    def write_pcap_header(f, dlt):
-        hdr = struct.pack("IHHiIII",
-                          0xa1b2c3d4,  # magic
-                          2, 4,  # version
-                          0,  # offset
-                          0,  # sigfigs
-                          8192,  # max packet len
-                          int(dlt)  # packet type
-                          )
+    file_obj.write(hdr)
 
-        f.write(hdr)
 
-    # Write a specific frame
-    def write_pcap_packet(f, timeval_s, timeval_us, packet_bytes):
-        packet_len = len(packet_bytes)
-        pkt = struct.pack("IIII",
-                          timeval_s,
-                          timeval_us,
-                          packet_len,
-                          packet_len
-                          )
-        f.write(pkt)
-        f.write(packet_bytes)
+def write_pcap_packet(file_obj, timeval_s, timeval_us, packet_bytes):
+    """Write a specific frame."""
+    packet_len = len(packet_bytes)
+    pkt = struct.pack("IIII",
+                      timeval_s,
+                      timeval_us,
+                      packet_len,
+                      packet_len
+                      )
+    file_obj.write(pkt)
+    file_obj.write(packet_bytes)
 
+
+def log_message(silent, message):
+    """Log a message to the console."""
+    if silent:
+        pass
+    else:
+        print(message)
+
+
+def get_args():
+    """Return parsed args."""
     parser = argparse.ArgumentParser(description=("Kismet to Pcap "
                                                   "Log Converter"))
     parser.add_argument("--in", action="store", dest="infile",
@@ -42,6 +52,7 @@ def main():
     parser.add_argument("--outtitle", action="store", dest="outtitle",
                         help="Output title (when limiting packets per file)")
     parser.add_argument("--limit-packets", action="store", dest="limitpackets",
+                        type=int,
                         help=("Generate multiple pcap files, limiting the "
                               "number of packets per file"))
     parser.add_argument("--source-uuid", action="append", dest="uuid",
@@ -61,62 +72,70 @@ def main():
                         help=("Only convert packets which are linked to the "
                               "specified device key (multiple --device-key "
                               "options will match multiple devices)"))
-    results = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    """Parse args and write pcaps."""
+    run_args = get_args()
 
     log_to_single = True
 
-    if results.infile is None:
-        print("Expected --in [file]")
+    if run_args.infile is None:
+        log_message(False, "Expected --in [file]")
         sys.exit(1)
 
-    if results.limitpackets is not None and results.outtitle is None:
-        print("Expected --outtitle when using --limit-packets")
+    if run_args.limitpackets is not None and run_args.outtitle is None:
+        log_message(False, "Expected --outtitle when using --limit-packets")
         sys.exit(1)
-    elif results.limitpackets is None and results.outfile is None:
-        print("Expected --out [file]")
+    elif run_args.limitpackets is None and run_args.outfile is None:
+        log_message(False, "Expected --out [file]")
         sys.exit(1)
-    elif results.limitpackets and results.outtitle:
-        print(("Limiting to {} packets per file in "
-               "{}-X.pcap").format(results.limitpackets, results.outtitle))
+    elif run_args.limitpackets and run_args.outtitle:
+        log_message(False, ("Limiting to {} packets per file in "
+                            "{}-X.pcap").format(run_args.limitpackets,
+                                                run_args.outtitle))
+        log_to_single = False
 
     query_args = {"dlt_gt": 0}
 
-    if results.uuid is not None:
-        query_args["datasource"] = results.uuid
+    if run_args.uuid is not None:
+        query_args["datasource"] = run_args.uuid
 
-    if results.starttime:
-        query_args["ts_sec_gt"] = results.starttime
+    if run_args.starttime:
+        query_args["ts_sec_gt"] = run_args.starttime
 
-    if results.endtime:
-        query_args["ts_sec_lt"] = results.endtime
+    if run_args.endtime:
+        query_args["ts_sec_lt"] = run_args.endtime
 
-    if results.minsignal:
-        query_args["min_signal"] = results.minsignal
+    if run_args.minsignal:
+        query_args["min_signal"] = run_args.minsignal
 
     logf = None
     lognum = 0
 
-    packet_store = kismetdb.Packets(results.infile)
+    packet_store = kismetdb.Packets(run_args.infile)
 
     npackets = 0
     file_mode = "wb"
     for result in packet_store.yield_all(**query_args):
         if logf is None:
-            if results.silent is None:
-                print("DLT {} for all packets".format(query_args["dlt_gt"]))
+            msg = "DLT {} for all packets".format(query_args["dlt_gt"])
+            log_message(run_args.silent, msg)
             if log_to_single:
-                if results.silent is None:
-                    print("Logging to {}".format(results.outfile))
-                logf = open(results.outfile, file_mode)
+                msg = "Logging to {}".format(run_args.outfile)
+                log_message(run_args.silent, msg)
+                logf = open(run_args.outfile, file_mode)
                 write_pcap_header(logf, result["dlt"])
             else:
-                if results.silent is None:
-                    print("Logging to {}-{}.pcap".format(results.outtitle,
-                                                         lognum))
-                logf = open("{}-{}.pcap".format(results.outtitle,
+                log_message(run_args.silent,
+                            "Logging to {}-{}.pcap".format(run_args.outtitle,
+                                                           lognum))
+                logf = open("{}-{}.pcap".format(run_args.outtitle,
                                                 lognum), file_mode)
                 lognum = lognum + 1
-                print("Writing PCAP header with DLT {}".format(result["dlt"]))
+                msg = "Writing PCAP header with DLT {}".format(result["dlt"])
+                log_message(False, msg)
                 write_pcap_header(logf, result["dlt"])
 
         write_pcap_packet(logf, int(result["ts_sec"]), int(result["ts_usec"]),
@@ -124,15 +143,15 @@ def main():
         npackets = npackets + 1
 
         if not log_to_single:
-            if npackets % results.limitpackets == 0:
+            if npackets % run_args.limitpackets == 0:
                 logf.close()
                 logf = None
-        elif results.silent is None:
+        elif run_args.silent is None:
             if npackets % 1000 == 0:
-                print("Converted {} packets...".format(npackets))
+                log_message(False, "Converted {} packets...".format(npackets))
 
-    if results.silent is None:
-        print("Done! Converted {} packets.".format(npackets))
+    if run_args.silent is None:
+        log_message(False, "Done! Converted {} packets.".format(npackets))
 
 
 if __name__ == "__main__":

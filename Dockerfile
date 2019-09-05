@@ -35,8 +35,13 @@ RUN  kismet_log_to_csv --in=./tests/assets/testdata.kismet_4 --table=alerts --ou
 RUN cat alerts.csv | wc -l
 
 # Test pcap script
-RUN kismet_log_to_pcap --in=./tests/assets/testdata.kismet_4 --out=./out.pcap > /dev/null
+RUN kismet_log_to_pcap --in=./tests/assets/testdata.kismet_4 --out=./out.pcap
 RUN tcpdump -r ./out.pcap > /dev/null
+
+# Test pcap script (multi-outfile)
+RUN kismet_log_to_pcap --in=./tests/assets/testdata.kismet_4 --limit-packets=1000 --outtitle=outpcap
+RUN tcpdump -r ./outpcap-0.pcap > /dev/null
+RUN tcpdump -r ./outpcap-1.pcap > /dev/null
 
 RUN kismet_log_devices_to_json --in=./tests/assets/testdata.kismet_4 --out=./out.json
 RUN cat ./out.json | wc -l
