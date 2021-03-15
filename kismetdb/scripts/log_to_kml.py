@@ -30,6 +30,8 @@ def main():
     parser.add_argument("--ssid", action="store", dest="ssid",
                         help=("Only plot networks which match the SSID "
                               "(or SSID regex)"))
+    parser.add_argument("--debug", action="store_true", dest="debug",
+                        help="Enable debug mode")
 
     results = parser.parse_args()
 
@@ -102,9 +104,13 @@ def main():
                                   loc["kismet.common.location.alt"])])
 
             num_plotted = num_plotted + 1
-        except TypeError:
+        except TypeError as err:
+            if results.debug:
+                print("Type error: {}".format(err))
             continue
-        except KeyError:
+        except KeyError as err:
+            if results.debug:
+                print("Key error: {}".format(err))
             continue
     kml.save(results.outfile)
     print("Exported {} devices to {}".format(num_plotted, results.outfile))
