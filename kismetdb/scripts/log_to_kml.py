@@ -97,8 +97,8 @@ def main():
                 title = mac
 
             kml.newpoint(name=title,
-                         coords=[(loc["kismet.common.location.lon"],
-                                  loc["kismet.common.location.lat"],
+                         coords=[(loc["kismet.common.location.geopoint"][0],
+                                  loc["kismet.common.location.geopoint"][1],
                                   loc["kismet.common.location.alt"])])
 
             num_plotted = num_plotted + 1
