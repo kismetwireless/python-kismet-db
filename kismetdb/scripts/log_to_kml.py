@@ -16,7 +16,7 @@ def main():
     parser.add_argument("--in", action="store", dest="infile",
                         help="Input (.kismet) file")
     parser.add_argument("--out", action="store", dest="outfile",
-                        help="Output filename (optional)")
+                        default="out.kml", help="Output filename (optional)")
     parser.add_argument("--start-time", action="store", dest="starttime",
                         help="Only list devices seen after given time")
     parser.add_argument("--min-signal", action="store", dest="minsignal",
