@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v2020.06.01
+-----------
+- Assume the last version of the db-specific fields and converters if no other version found [Mike Kershaw / Dragorn]
+
 v2019.05.05
 -----------
 - Handle missing SYSTEM snapshots during Kismet processing [Mike Kershaw / Dragorn]

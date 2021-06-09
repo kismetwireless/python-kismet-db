@@ -51,10 +51,19 @@ class BaseInterface(object):
         self.check_db_exists(file_location)
         self.db_file = file_location
         self.db_version = self.get_db_version()
-        self.column_names = self.column_reference[self.db_version]
+        self.column_names = self.__get_latest_version(self.column_reference)
         self.check_column_names(file_location)
         self.full_query_column_names = self.get_query_column_names()
         self.meta_query_column_names = self.get_meta_query_column_names()
+
+    def __get_latest_version(self, content):
+        if self.db_version in content:
+            return content[self.db_version]
+
+        last = max(k for k, v in content.items())
+
+        return content[last]
+
 
     def get_db_version(self):
         sql = "SELECT db_version from KISMET"
@@ -77,8 +86,10 @@ class BaseInterface(object):
 
         """
         result = []
-        converter_reference = self.converters_reference[self.db_version]
-        column_reference = self.column_reference[self.db_version]
+        # converter_reference = self.converters_reference[self.db_version]
+        converter_reference = self.__get_latest_version(self.converters_reference)
+        # column_reference = self.column_reference[self.db_version]
+        column_reference = self.__get_latest_version(self.column_reference)
         for col in column_reference:
             if col in converter_reference.keys():
                 result.append("{} as \"{} [{}]\"".format(col, col, col))
@@ -96,8 +107,10 @@ class BaseInterface(object):
 
         """
         result = []
-        converter_reference = self.converters_reference[self.db_version]
-        column_reference = self.column_reference[self.db_version]
+        #converter_reference = self.converters_reference[self.db_version]
+        converter_reference = self.__get_latest_version(self.converters_reference)
+        #column_reference = self.column_reference[self.db_version]
+        column_reference = self.__get_latest_version(self.column_reference)
         for col in column_reference:
             if col == self.bulk_data_field:
                 continue
@@ -298,11 +311,14 @@ class BaseInterface(object):
         Returns:
             list: List of dictionary items.
         """
-        static_fields = self.field_defaults[self.db_version]
+        # static_fields = self.field_defaults[self.db_version]
+        static_fields = self.__get_latest_version(self.field_defaults)
+
         results = []
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
-        for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
+        converter_reference = self.__get_latest_version(self.converters_reference)
+        for field_name, converter in list(converter_reference.items()):  # NOQA
             sqlite3.register_converter(field_name, converter)
         cur = db.cursor()
         cur.execute(sql, replacements)
@@ -326,10 +342,12 @@ class BaseInterface(object):
             dict: Dictionary object representing one row in result of SQL
                 query.
         """
-        static_fields = self.field_defaults[self.db_version]
+        #static_fields = self.field_defaults[self.db_version]
+        static_fields = self.__get_latest_version(self.field_defaults)
         db = sqlite3.connect(self.db_file, detect_types=sqlite3.PARSE_COLNAMES)
         db.row_factory = sqlite3.Row
-        for field_name, converter in list(self.converters_reference[self.db_version].items()):  # NOQA
+        converter_reference = self.__get_latest_version(self.converters_reference)
+        for field_name, converter in list(converter_reference.items()):  # NOQA
             sqlite3.register_converter(field_name, converter)
         cur = db.cursor()
         cur.execute(sql, replacements)
