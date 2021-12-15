@@ -41,11 +41,15 @@ class Packets(BaseInterface):
                           "speed": 0,
                           "heading": 0},
                       5: {},
-                      6: {}}
+                      6: {},
+                      7: {},
+                      8: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon},
                             5: {},
-                            6: {}}
+                            6: {},
+                            7: {},
+                            8: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "sourcemac",
                             "destmac", "transmac", "frequency", "devkey",
                             "lat", "lon", "packet_len", "signal", "datasource",
@@ -59,7 +63,18 @@ class Packets(BaseInterface):
                             "destmac", "transmac", "frequency", "devkey",
                             "lat", "lon", "alt", "speed", "heading",
                             "packet_len", "signal", "datasource", "dlt",
-                            "packet", "error", "tags"]}
+                            "packet", "error", "tags"],
+                        7: ["ts_sec", "ts_usec", "phyname", "sourcemac",
+                            "destmac", "transmac", "frequency", "devkey",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "packet_len", "signal", "datasource", "dlt",
+                            "packet", "error", "tags", "datarate"],
+                        8: ["ts_sec", "ts_usec", "phyname", "sourcemac",
+                            "destmac", "transmac", "frequency", "devkey",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "packet_len", "signal", "datasource", "dlt",
+                            "packet", "error", "tags", "datarate", "hash",
+                            "packetid"]}
     valid_kwargs = {"ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devkey": Utility.generate_multi_string_sql_eq,
@@ -71,4 +86,7 @@ class Packets(BaseInterface):
                     "datasource": Utility.generate_multi_string_sql_eq,
                     "min_signal": Utility.generate_single_int_sql_gt,
                     "dlt_gt": Utility.generate_single_int_sql_gt,
-                    "tags": Utility.generate_multi_string_sql_eq}
+                    "tags": Utility.generate_multi_string_sql_eq,
+                    "datarate": Utility.generate_single_float_sql_eq,
+                    "hash": Utility.generate_single_string_sql_eq,
+                    "packetid": Utility.generate_single_int_sql_eq}
