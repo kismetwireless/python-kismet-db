@@ -43,7 +43,9 @@ class Devices(BaseInterface):
     bulk_data_field = "device"
     field_defaults = {4: {},
                       5: {},
-                      6: {}}
+                      6: {},
+                      7: {},
+                      8: {}}
     converters_reference = {4: {"device": Utility.device_field_parser,
                                 "min_lat": Utility.format_int_as_latlon,
                                 "min_lon": Utility.format_int_as_latlon,
@@ -52,7 +54,9 @@ class Devices(BaseInterface):
                                 "avg_lat": Utility.format_int_as_latlon,
                                 "avg_lon": Utility.format_int_as_latlon},
                             5: {"device": Utility.device_field_parser},
-                            6: {"device": Utility.device_field_parser}}
+                            6: {"device": Utility.device_field_parser},
+                            7: {"device": Utility.device_field_parser},
+                            8: {"device": Utility.device_field_parser}}
     column_reference = {4: ["first_time", "last_time", "devkey", "phyname",
                             "devmac", "strongest_signal", "min_lat", "min_lon",
                             "max_lat", "max_lon", "avg_lat", "avg_lon",
@@ -62,6 +66,14 @@ class Devices(BaseInterface):
                             "max_lat", "max_lon", "avg_lat", "avg_lon",
                             "bytes_data", "type", "device"],
                         6: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"],
+                        7: ["first_time", "last_time", "devkey", "phyname",
+                            "devmac", "strongest_signal", "min_lat", "min_lon",
+                            "max_lat", "max_lon", "avg_lat", "avg_lon",
+                            "bytes_data", "type", "device"],
+                        8: ["first_time", "last_time", "devkey", "phyname",
                             "devmac", "strongest_signal", "min_lat", "min_lon",
                             "max_lat", "max_lon", "avg_lat", "avg_lon",
                             "bytes_data", "type", "device"]}

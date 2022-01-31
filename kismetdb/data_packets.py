@@ -37,12 +37,16 @@ class DataPackets(BaseInterface):
                           "speed": 0,
                           "heading": 0},
                       5: {},
-                      6: {}}
+                      6: {},
+                      7: {},
+                      8L {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon,
                                 "json": Utility.device_field_parser},
                             5: {"json": Utility.device_field_parser},
-                            6: {"json": Utility.device_field_parser}}
+                            6: {"json": Utility.device_field_parser},
+                            7: {"json": Utility.device_field_parser},
+                            8: {"json": Utility.device_field_parser}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "devmac",
                             "lat", "lon", 
                             "datasource", "type", "json"],
@@ -50,6 +54,12 @@ class DataPackets(BaseInterface):
                             "lat", "lon", "alt", "speed", "heading",
                             "datasource", "type", "json"],
                         6: ["ts_sec", "ts_usec", "phyname", "devmac",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "datasource", "type", "json"],
+                        7: ["ts_sec", "ts_usec", "phyname", "devmac",
+                            "lat", "lon", "alt", "speed", "heading",
+                            "datasource", "type", "json"],
+                        8: ["ts_sec", "ts_usec", "phyname", "devmac",
                             "lat", "lon", "alt", "speed", "heading",
                             "datasource", "type", "json"]}
     valid_kwargs = {"ts_sec_lt": Utility.generate_single_tstamp_secs_lt,

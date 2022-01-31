@@ -28,22 +28,25 @@ class Snapshots(BaseInterface):
     bulk_data_field = "json"
     field_defaults = {4: {},
                       5: {},
-                      6: {}}
+                      6: {},
+                      7: {},
+                      8: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon,
                                 "json": Utility.device_field_parser},
                             5: {"json": Utility.device_field_parser},
-                            6: {"json": Utility.device_field_parser}
-                            }
+                            6: {"json": Utility.device_field_parser},
+                            7: {"json": Utility.device_field_parser},
+                            8: {"json": Utility.device_field_parser}}
     column_reference = {4: ["ts_sec", "ts_usec", "snaptype", "json"],
                         5: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
                         6: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
-                        }
+                        7: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"],
+                        8: ["ts_sec", "ts_usec", "lat", "lon", "snaptype", "json"]}
     valid_kwargs = {"ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "lat_gt": Utility.generate_single_float_sql_gt,
                     "lon_gt": Utility.generate_single_float_sql_gt,
                     "lat_lt": Utility.generate_single_float_sql_lt,
                     "lon_lt": Utility.generate_single_float_sql_lt,
-                    "snaptype": Utility.generate_single_string_sql_eq,
-                    }
+                    "snaptype": Utility.generate_single_string_sql_eq}

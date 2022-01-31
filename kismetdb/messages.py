@@ -30,21 +30,22 @@ class Messages(BaseInterface):
                       5: {},
                       6: {},
                       7: {},
-                      8: {}
-                      }
+                      8: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon},
                             5: {},
                             6: {},
                             7: {},
-                            8: {}
-                            }
-    column_reference = {4: ["ts_sec", "lat", "lon", "msgtype", "message"]}
+                            8: {}}
+    column_reference = {4: ["ts_sec", "lat", "lon", "msgtype", "message"],
+                        5: ["ts_sec", "lat", "lon", "msgtype", "message"],
+                        6: ["ts_sec", "lat", "lon", "msgtype", "message"],
+                        7: ["ts_sec", "lat", "lon", "msgtype", "message"],
+                        8: ["ts_sec", "lat", "lon", "msgtype", "message"]}
     valid_kwargs = {"ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "ts_sec_lt": Utility.generate_single_tstamp_secs_lt,
                     "lat_gt": Utility.generate_single_float_sql_gt,
                     "lon_gt": Utility.generate_single_float_sql_gt,
                     "lat_lt": Utility.generate_single_float_sql_lt,
                     "lon_lt": Utility.generate_single_float_sql_lt,
-                    "msgtype": Utility.generate_single_string_sql_eq,
-                    }
+                    "msgtype": Utility.generate_single_string_sql_eq}

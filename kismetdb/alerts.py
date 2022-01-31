@@ -25,16 +25,24 @@ class Alerts(BaseInterface):
     bulk_data_field = "json"
     field_defaults = {4: {},
                       5: {},
-                      6: {}}
+                      6: {},
+                      7: {},
+                      8: {}}
     converters_reference = {4: {"lat": Utility.format_int_as_latlon,
                                 "lon": Utility.format_int_as_latlon},
                             5: {},
-                            6: {}}
+                            6: {},
+                            7: {},
+                            8: {}}
     column_reference = {4: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
                             "lon", "header", "json"],
                         5: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
                             "lon", "header", "json"],
                         6: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
+                            "lon", "header", "json"],
+                        7: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
+                            "lon", "header", "json"],
+                        8: ["ts_sec", "ts_usec", "phyname", "devmac", "lat",
                             "lon", "header", "json"]}
     valid_kwargs = {"ts_sec_gt": Utility.generate_single_tstamp_secs_gt,
                     "devmac": Utility.generate_multi_string_sql_eq,
