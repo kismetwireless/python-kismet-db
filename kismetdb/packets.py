@@ -33,7 +33,7 @@ class Packets(BaseInterface):
         min_signal (str or int): Minimum signal.
         dlt_gt (str or int): Minimum DLT.
         tags (str or list): Match packets using a tag or list of tags.
-        datarate_lt (real): Exact match against the datarate.
+        datarate (real): Exact match against the datarate.
         datarate_lt (real): Match packets where the datarate is less than this.
         datarate_gt (real): Match packets where the datarate is greater than this.
         hash (str): Exact match against CRC32 hash.
