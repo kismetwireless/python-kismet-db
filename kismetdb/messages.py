@@ -32,7 +32,8 @@ class Messages(BaseInterface):
                       7: {},
                       8: {}
                       }
-    converters_reference = {4: {},
+    converters_reference = {4: {"lat": Utility.format_int_as_latlon,
+                                "lon": Utility.format_int_as_latlon},
                             5: {},
                             6: {},
                             7: {},
