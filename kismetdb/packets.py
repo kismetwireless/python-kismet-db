@@ -33,6 +33,7 @@ class Packets(BaseInterface):
         min_signal (str or int): Minimum signal.
         dlt_gt (str or int): Minimum DLT.
         tags (str or list): Match packets using a tag or list of tags.
+        datarate_lt (real): Exact match against the datarate.
         datarate_lt (real): Match packets where the datarate is less than this.
         datarate_gt (real): Match packets where the datarate is greater than this.
         hash (str): Exact match against CRC32 hash.
@@ -92,6 +93,7 @@ class Packets(BaseInterface):
                     "min_signal": Utility.generate_single_int_sql_gt,
                     "dlt_gt": Utility.generate_single_int_sql_gt,
                     "tags": Utility.generate_multi_string_sql_eq,
+                    "datarate": Utility.generate_single_float_sql_eq,
                     "datarate_lt": Utility.generate_single_float_sql_lt,
                     "datarate_gt": Utility.generate_single_float_sql_gt,
                     "hash": Utility.generate_single_string_sql_eq,
