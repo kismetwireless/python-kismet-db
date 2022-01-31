@@ -4,6 +4,7 @@ from .data_packets import DataPackets  # NOQA
 from .data_sources import DataSources  # NOQA
 from .devices import Devices  # NOQA
 from .kismet import Kismet  # NOQA
+from .messages import Messages  # NOQA
 from .packets import Packets  # NOQA
 from .snapshots import Snapshots  # NOQA
 from .utility import Utility  # NOQA
